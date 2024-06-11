@@ -2,17 +2,24 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-
+const bcrypt = require('bcrypt');
 
 const usersSchema = new mongoose.Schema({
-  id: String, 
   name: String, 
-  email: String, 
-  user: String, 
+  email: { type: String, unique: true },
+  user: { type: String, unique: true },
   pwd: String, 
   level: String, 
   status: String, 
   create_date: { type: Date, default: Date.now }
+});
+
+// Hash password before saving
+usersSchema.pre('save', async function(next) {
+  if (this.isModified('pwd') || this.isNew) {
+    this.pwd = await bcrypt.hash(this.pwd, 10);
+  }
+  next();
 });
 
 const User = mongoose.model('User', usersSchema);
@@ -32,9 +39,12 @@ router.get('/', async (req, res) => {
 // Retornar um usuário específico
 // GET /users/:id
 router.get('/:id', async (req, res) => {
-  const pid = req.params.pid;
+  const { id } = req.params;
   try {
-    const foundedUser = await User.findById( pid );
+    const foundedUser = await User.findById(id);
+    if (!foundedUser) {
+      return res.status(404).json({ message: 'Usuário não encontrado.' });
+    }
     console.log('Objeto encontrado com sucesso!');
     res.json({ message: 'Usuário encontrado com sucesso!', foundedUser });
   } catch (err) {
@@ -63,16 +73,15 @@ router.post('/', async (req, res) => {
   }
 });
 
-
 // Alterar um usuário
 // PUT "/users/:id" BODY { ... }
 router.put('/:id', async (req, res) => {
-  const pid = req.params.pid;
+  const { id } = req.params;
   const updatedUserData = req.body.user; // Obtenha os dados atualizados do usuário do corpo da solicitação
   
   try {
     // Verifique se o usuário que está sendo atualizado existe
-    const existingUser = await User.findById(pid);
+    const existingUser = await User.findById(id);
     if (!existingUser) {
       return res.status(404).json({ message: 'Usuário não encontrado.' });
     }
@@ -81,7 +90,9 @@ router.put('/:id', async (req, res) => {
     existingUser.name = updatedUserData.name;
     existingUser.email = updatedUserData.email;
     existingUser.user = updatedUserData.user;
-    existingUser.pwd = updatedUserData.pwd;
+    if (updatedUserData.pwd) {
+      existingUser.pwd = await bcrypt.hash(updatedUserData.pwd, 10); // Hash a nova senha
+    }
     existingUser.level = updatedUserData.level;
     existingUser.status = updatedUserData.status;
 
@@ -94,16 +105,17 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-
 // Deletar um usuário
 // DELETE "/users/:id"
 router.delete('/:id', async (req, res) => {
-  const pid = req.params.pid;
+  const { id } = req.params;
   try {
-    const deletedUser = await User.findByIdAndDelete(pid);
+    const deletedUser = await User.findByIdAndDelete(id);
+    if (!deletedUser) {
+      return res.status(404).json({ message: 'Usuário não encontrado.' });
+    }
     console.log('Objeto deletado:', deletedUser);
     res.json({ message: 'Usuário deletado com sucesso!', deletedUser });
-    //res.json(deletedUser);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
