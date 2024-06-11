@@ -55,8 +55,8 @@ router.get('/:id', async (req, res) => {
 // Inserir um novo usuário
 // POST "/users" BODY { ... }
 router.post('/', async (req, res) => {
-  const userData = req.body.user;
-  
+  const userData = req.body; // Atribuir o corpo da solicitação diretamente a userData
+
   try {
     // Verificar se já existe um usuário com o mesmo email
     const existingUser = await User.findOne({ email: userData.email });
@@ -72,6 +72,7 @@ router.post('/', async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 });
+
 
 // Alterar um usuário
 // PUT "/users/:id" BODY { ... }
