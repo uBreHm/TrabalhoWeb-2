@@ -1,9 +1,14 @@
+// routes/admin.js
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
-const Account = require('../models/Account');
-const Category = require('../models/Category');
-const Entry = require('../models/Entry');
+const User = require('../routes/users');
+const Account = require('../routes/accounts');
+const Category = require('../routes/categories');
+const Entry = require('../routes/entries');
+const adminMiddleware = require('../middleware/adminMiddleware'); // Importar o middleware de administração
+
+// Aplicar o middleware de administração para todas as rotas neste arquivo
+router.use(adminMiddleware);
 
 // CRUD de Receitas e Despesas (Entries)
 router.get('/entries', async (req, res) => {

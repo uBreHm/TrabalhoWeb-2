@@ -1,7 +1,7 @@
 // middleware/authMiddleware.js
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
-const secret = process.env.JWT_SECRET;
+
+const secret = "b88a58a7effe40649cbcd84e5533bb15";
 
 module.exports = (req, res, next) => {
   const authHeader = req.header('Authorization');
@@ -17,6 +17,12 @@ module.exports = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, secret);
     req.user = decoded;
+
+    // Verificar se o usuário tem permissão de administrador
+    if (req.user.level !== 'admin') {
+      return res.status(403).json({ message: 'Acesso negado. Você não tem permissão de administrador.' });
+    }
+
     console.log('Token verificado com sucesso', decoded);
     next();
   } catch (err) {

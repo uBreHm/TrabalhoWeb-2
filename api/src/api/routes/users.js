@@ -1,8 +1,7 @@
-// routes/users.js
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs'); // Use bcryptjs
 
 const usersSchema = new mongoose.Schema({
   name: String, 
@@ -65,7 +64,8 @@ router.post('/', async (req, res) => {
     }
     
     // Se não houver usuário com o mesmo email, crie o novo usuário
-    const newUser = await User.create(userData);
+    const newUser = new User(userData);
+    await newUser.save();
     console.log('Objeto salvo com sucesso!');
     res.json({ message: 'Usuário salvo com sucesso!', newUser });
   } catch (err) {
@@ -73,13 +73,12 @@ router.post('/', async (req, res) => {
   }
 });
 
-
 // Alterar um usuário
 // PUT "/users/:id" BODY { ... }
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const updatedUserData = req.body.user; // Obtenha os dados atualizados do usuário do corpo da solicitação
-  
+  const updatedUserData = req.body;
+
   try {
     // Verifique se o usuário que está sendo atualizado existe
     const existingUser = await User.findById(id);

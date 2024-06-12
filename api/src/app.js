@@ -1,14 +1,7 @@
-// index.js
-require('dotenv').config(); // Carrega variáveis de ambiente do arquivo .env
 const express = require('express');
 const app = express();
 const db = require('./db');
 const routes = require('./api/routes');
-const authRoutes = require('./api/routes/auth');
-const userRoutes = require('./api/routes/users');
-const accountRoutes = require('./api/routes/accounts');
-const categoriesRoutes = require('./api/routes/categories');
-const entriesRoutes = require('./api/routes/entries');
 const authMiddleware = require('./api/middleware/middleware');
 
 // Middleware
@@ -29,13 +22,19 @@ db.once('open', () => {
     console.log('Conexão com o MongoDB estabelecida com sucesso!');
 });
 
+// Defina o segredo JWT diretamente aqui
+const secret = "b88a58a7effe40649cbcd84e5533bb15";
+
+
 // Rotas
 app.use('/api', routes);
-app.use('/auth', authRoutes);
-app.use('/users', authMiddleware, userRoutes);
-app.use('/accounts', authMiddleware, accountRoutes);
-app.use('/categories', authMiddleware, categoriesRoutes);
-app.use('/entries', authMiddleware, entriesRoutes);
+app.use('/auth', require('./api/routes/auth')); // Certifique-se de que está usando a rota correta
+
+// Rotas protegidas
+app.use('/users', authMiddleware, require('./api/routes/users'));
+app.use('/accounts', authMiddleware, require('./api/routes/accounts'));
+app.use('/categories', authMiddleware, require('./api/routes/categories'));
+app.use('/entries', authMiddleware, require('./api/routes/entries'));
 
 // Tratamento de erros
 app.use((err, req, res, next) => {
