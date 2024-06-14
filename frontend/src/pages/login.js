@@ -44,6 +44,7 @@ export default function Login() {
       }
     } catch (error) {
       console.error('Erro ao fazer login:', error.message);
+      Cookies.remove('token');
       router.push('/login');
     }
   };

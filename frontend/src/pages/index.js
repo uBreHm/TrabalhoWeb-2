@@ -1,8 +1,9 @@
 // pages/index.js
+
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-export default function Home() {
+const HomePage = () => {
   const router = useRouter();
 
   useEffect(() => {
@@ -11,4 +12,6 @@ export default function Home() {
   }, []);
 
   return null; // Não renderiza nada na página inicial
-}
+};
+
+export default HomePage;
