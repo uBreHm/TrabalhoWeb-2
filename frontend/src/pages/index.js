@@ -1,12 +1,14 @@
-import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
-
-const inter = Inter({ subsets: ["latin"] });
+// pages/index.js
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Home() {
-  return (
-    <div>Home</div>
-  );
+  const router = useRouter();
+
+  useEffect(() => {
+    // Redireciona para a página de login assim que a página inicial for carregada
+    router.replace('/login');
+  }, []);
+
+  return null; // Não renderiza nada na página inicial
 }

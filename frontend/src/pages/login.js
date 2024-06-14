@@ -1,6 +1,8 @@
+// Login.js
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { login } from '../pages/api/hello'; 
+import { login, checkAdmin } from '../pages/api/hello'; // Importe as funções de login e checkAdmin
+import styles from '../styles/login.module.css'; // Importe o estilo CSS
 
 export default function Login() {
   const router = useRouter();
@@ -20,15 +22,24 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log('Chamando a API em: localhost:8080/api/auth/login');
-  
       const response = await login(formData.user, formData.pwd);
-      console.log('Login efetuado com sucesso:', response);
-  
-      if (response && response.user && response.user.level === 'admin') {
-        router.push('/admin/dashboard');
+      if (response && response.token) {
+        localStorage.setItem('token', `Bearer ${response.token}`);
+
+        try {
+          const isAdminResponse = await checkAdmin(response.token);
+          if (isAdminResponse.isAdmin === true) {
+            router.push('/admin/dashboard'); // Redireciona para a dashboard de admin
+          } else {
+            console.error('Usuário não é administrador');
+            router.push('/'); // Redireciona para a página inicial
+          }
+        } catch (error) {
+          console.error('Erro ao verificar acesso de administrador:', error.message);
+          router.push('/login'); // Em caso de erro, redireciona para o login
+        }
       } else {
-        router.push('/');
+        router.push('/login');
       }
     } catch (error) {
       console.error('Erro ao fazer login:', error.message);
@@ -37,19 +48,21 @@ export default function Login() {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Usuário:</label>
-          <input type="text" name="user" value={formData.user} onChange={handleChange} />
-        </div>
-        <div>
-          <label>Senha:</label>
-          <input type="password" name="pwd" value={formData.pwd} onChange={handleChange} />
-        </div>
-        <button type="submit">Entrar</button>
-      </form>
+    <div className={styles.container}>
+      <div className={styles.form}>
+        <h1>Login</h1>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>Usuário:</label>
+            <input type="text" name="user" value={formData.user} onChange={handleChange} className={styles.input} />
+          </div>
+          <div>
+            <label>Senha:</label>
+            <input type="password" name="pwd" value={formData.pwd} onChange={handleChange} className={styles.input} />
+          </div>
+          <button type="submit" className={styles.button}>Entrar</button>
+        </form>
+      </div>
     </div>
   );
 }

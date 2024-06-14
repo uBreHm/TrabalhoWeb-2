@@ -39,7 +39,7 @@ router.post('/login', async (req, res) => {
 
 // Rota protegida por autenticação e verificação de administrador
 router.get('/admin', authMiddleware, (req, res) => {
-  res.json({ message: 'Você é um administrador!' });
+  res.json({ isAdmin: true });
 });
 
 module.exports = router;
