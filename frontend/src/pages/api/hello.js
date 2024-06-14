@@ -1,4 +1,4 @@
-// api.js
+// pages/api/hello
 
 const BASE_URL = 'http://localhost:8080/api'; // URL base da sua API Node.js
 
@@ -27,3 +27,20 @@ export async function login(user, pwd) {
     throw new Error(`Erro ao fazer login: ${error.message}`);
   }
 }
+
+export async function checkAdmin(token) {
+  try {
+    const response = await fetch(`${BASE_URL}/auth/admin`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Usuário não é administrador");
+    }
+    return response.json();
+  } catch (error) {
+    throw new Error(`Erro ao verificar acesso de administrador: ${error.message}`);
+  }
+}
+

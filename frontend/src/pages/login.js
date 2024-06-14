@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { login, checkAdmin } from '../pages/api/hello'; // Importe as funções de login e checkAdmin
 import styles from '../styles/login.module.css'; // Importe o estilo CSS
+import Cookies from 'js-cookie'; // Importe js-cookie
 
 export default function Login() {
   const router = useRouter();
@@ -24,7 +25,7 @@ export default function Login() {
     try {
       const response = await login(formData.user, formData.pwd);
       if (response && response.token) {
-        localStorage.setItem('token', `Bearer ${response.token}`);
+        Cookies.set('token', response.token); // Armazena o token em um cookie
 
         try {
           const isAdminResponse = await checkAdmin(response.token);

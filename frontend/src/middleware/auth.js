@@ -1,18 +1,20 @@
-// src/middlewares/auth.js
-import jwtDecode from 'jwt-decode';
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers'; // Importa a API correta para headers em middleware
+import jwt from 'jsonwebtoken';
 
 const secret = "b88a58a7effe40649cbcd84e5533bb15";
 
 export async function middleware(req) {
-  const token = req.cookies.get('token') || '';
+  // Utilize a API correta para obter cookies
+  const cookieStore = cookies();
+  const token = cookieStore.get('token')?.value || '';
 
   if (!token) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
   try {
-    const decoded = jwtDecode(token);
+    const decoded = jwt.decode(token);
 
     // Verifica se o token está próximo de expirar
     const currentTime = Date.now() / 1000;
@@ -21,7 +23,7 @@ export async function middleware(req) {
     }
 
     // Atualiza o cookie do token (opcional)
-    req.cookies.set('token', token, { httpOnly: true, sameSite: 'strict', secure: true });
+    cookieStore.set('token', token, { httpOnly: true, sameSite: 'strict', secure: true });
 
     return NextResponse.next();
   } catch (error) {
