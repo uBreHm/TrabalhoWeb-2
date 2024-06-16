@@ -1,0 +1,33 @@
+/* Nav.module.css */
+.nav {
+    background-color: #f8f9fa; /* Cor de fundo clara */
+    border-bottom: 1px solid #dee2e6; /* Linha de borda inferior */
+    padding: 10px 20px; /* Espaçamento interno */
+  }
+  
+  .nav ul {
+    list-style: none; /* Remove marcadores da lista */
+    margin: 0; /* Remove margem */
+    padding: 0; /* Remove padding */
+    display: flex; /* Exibe itens em linha */
+    align-items: center; /* Alinha itens verticalmente */
+  }
+  
+  .nav li {
+    margin-right: 20px; /* Espaçamento entre itens */
+  }
+  
+  .nav li:last-child {
+    margin-right: 0; /* Remove margem do último item */
+  }
+  
+  .nav a {
+    text-decoration: none; /* Remove sublinhado dos links */
+    color: #007bff; /* Cor do link */
+    font-weight: 500; /* Negrito */
+  }
+  
+  .nav a:hover {
+    text-decoration: underline; /* Sublinha links ao passar o mouse */
+  }
+  
