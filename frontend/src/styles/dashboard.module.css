@@ -1,19 +1,21 @@
-/* dashboard.module.css */
 .container {
-  background-color: white;
-  /* Ajuste conforme necessário */
-  color: black;
-  /* Ajuste conforme necessário */
-  min-height: 100vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  min-height: 100vh;
+  background-color: #f7fafc; /* Cor de fundo clara */
 }
 
-.form {
-  background-color: white;
-  color: black;
+.content {
+  margin-left: 220px; /* Margem à esquerda para compensar a largura do Nav */
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: calc(100% - 220px); /* Largura total menos a margem do Nav */
+}
+
+.content h1 {
+  font-size: 2rem;
+  color: #2d3748; /* Cor do título */
+}
+
+.content p {
+  font-size: 1.2rem;
+  color: #4a5568; /* Cor do texto */
 }

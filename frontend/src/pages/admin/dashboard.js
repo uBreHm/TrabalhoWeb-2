@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import { checkAdmin } from '../api/hello';
-import Nav from '../../components/nav'; // Verifique se o caminho está correto
 import styles from '../../styles/dashboard.module.css';
+import Nav from '@/components/nav'; // Importe o componente Nav corretamente
 
 export default function AdminDashboard() {
   const router = useRouter();
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // Estado de carregamento
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = Cookies.get('token');
@@ -19,7 +19,7 @@ export default function AdminDashboard() {
     } else {
       checkAdmin(token)
         .then((isAdminResponse) => {
-          if (isAdminResponse.isAdmin) {
+          if (isAdminResponse && isAdminResponse.isAdmin) {
             setUser(isAdminResponse);
           } else {
             console.error('Usuário não é administrador');
@@ -31,13 +31,13 @@ export default function AdminDashboard() {
           router.push('/login');
         })
         .finally(() => {
-          setLoading(false); // Finaliza o estado de carregamento
+          setLoading(false);
         });
     }
   }, [router]);
 
   if (loading) {
-    return <p>Carregando...</p>; // Renderiza um estado de carregamento
+    return <p>Carregando...</p>;
   }
 
   if (!user) {
@@ -46,8 +46,8 @@ export default function AdminDashboard() {
 
   return (
     <div className={styles.container}>
-      {/* <Nav /> */}
-      <div className={styles.form}>
+      <Nav /> {/* Renderiza o componente Nav */}
+      <div className={styles.content}>
         <h1>Admin Dashboard</h1>
         <p>Bem-vindo, {user.user}!</p>
       </div>

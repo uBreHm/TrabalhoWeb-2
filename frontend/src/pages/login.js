@@ -24,10 +24,6 @@ export default function Login() {
         Cookies.set('token', response.token);
         try {
           const isAdminResponse = await checkAdmin(response.token);
-          token = response.token;
-          if(!response){
-            setMessage({type: 'error', text: 'Usuário desativado!'})
-          }
           if (isAdminResponse.isAdmin) {
             setMessage({ type: 'success', text: 'Login efetuado com sucesso' });
             router.push('/admin/dashboard');

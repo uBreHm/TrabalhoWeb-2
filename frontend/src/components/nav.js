@@ -1,19 +1,21 @@
-// // src/components/Nav.js
+// src/components/Nav.js
 
-// import Link from 'next/link';
-// import styles from '../styles/nav.module.css';
+import { Button, Flex, Link } from '@chakra-ui/react';
+import NextLink from 'next/link'; // Importando Link do Next.js
 
-// export default function Nav() {
-//   return (
-//     <nav className={styles.nav}>
-//       <ul>
-//         <li>
-//           <Link href="/admin/dashboard">
-//             Dashboard
-//           </Link>
-//         </li>
-//         {/* Adicione outros links conforme necessário */}
-//       </ul>
-//     </nav>
-//   );
-// }
+export default function Nav() {
+  return (
+    <nav>
+      <Flex direction="column" alignItems="flex-start">
+        <Flex direction="column" mt="auto" pt="20px">
+          <Button as={NextLink} href="/admin/cadastrar-usuario" variant="solid">
+            Cadastrar Usuário
+          </Button>
+          <Button as={NextLink} href="/admin/cadastrar-contas" variant="solid">
+            Cadastrar Contas
+          </Button>
+        </Flex>
+      </Flex>
+    </nav>
+  );
+}

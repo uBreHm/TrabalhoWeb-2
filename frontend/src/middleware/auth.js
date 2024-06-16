@@ -1,56 +1,41 @@
+// middleware/auth.js
+import { checkAdmin } from '@/pages/api/hello';
 import jwt from 'jsonwebtoken';
 
-const secret = "b88a58a7effe40649cbcd84e5533bb15";
-
-export async function authMiddleware(req) {
-  const token = req.cookies.token || '';
+export async function authMiddleware({ url, cookies }) {
+  const token = extractTokenFromCookies(cookies);
 
   if (!token) {
-    return {
-      status: 302,
-      headers: {
-        location: '/login'
-      }
-    };
+    return { next: { pathname: '/login' } }; // Redireciona para a página de login se não houver token
   }
 
   try {
     const decoded = jwt.verify(token, secret);
 
-    const currentTime = Date.now() / 1000;
+    const currentTime = Math.floor(Date.now() / 1000);
     if (decoded.exp < currentTime) {
-      return {
-        status: 302,
-        headers: {
-          location: '/login'
-        }
-      };
+      return { next: { pathname: '/login' } }; // Token expirado, redireciona para a página de login
     }
 
-    // Verificar se o usuário é administrador, se necessário
-    // if (decoded.role !== 'admin') {
-    //   console.error('Usuário não é administrador');
-    //   return {
-    //     status: 302,
-    //     headers: {
-    //       location: '/'
-    //     }
-    //   };
-    // }
+    // Verifica se o usuário é administrador
+    const isAdminResponse = await checkAdmin(token);
+    if(isAdminResponse.isAdmin){
+      return true;
+    }
 
-    // Atualiza o token no cookie
-    req.cookies.token = token;
-
-    return {
-      next: {}
-    };
+    return { next: null }; // Continua para a próxima etapa sem redirecionamento
   } catch (error) {
     console.error('Erro de autenticação:', error.message);
-    return {
-      status: 302,
-      headers: {
-        location: '/login'
-      }
-    };
+    return { next: { pathname: '/login' } }; // Qualquer erro de verificação de token, redireciona para a página de login
   }
 }
+
+function extractTokenFromCookies(cookies) {
+  if (!cookies) {
+    return '';
+  }
+  const token = cookies.token;
+
+  return token || '';
+}
+
