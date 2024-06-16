@@ -46,7 +46,7 @@ export default function AdminDashboard() {
 
   return (
     <div className={styles.container}>
-      <Nav />
+      {/* <Nav /> */}
       <div className={styles.form}>
         <h1>Admin Dashboard</h1>
         <p>Bem-vindo, {user.user}!</p>

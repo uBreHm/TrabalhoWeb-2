@@ -28,8 +28,12 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Credenciais inválidas!' });
     }
 
+    if(foundUser.status == 'off'){
+      return res.status(403).json({ message: 'Usuário desativado!' });
+    }
+
     console.log('Valor do secret:', secret);
-    const token = jwt.sign({ id: foundUser._id, user: foundUser.user, level: foundUser.level }, secret, { expiresIn: '1h' });
+    const token = jwt.sign({ id: foundUser._id, user: foundUser.user, level: foundUser.level, status: foundUser.status }, secret, { expiresIn: '1h' });
     res.json({ message: 'Login efetuado com sucesso', token });
     
   } catch (err) {

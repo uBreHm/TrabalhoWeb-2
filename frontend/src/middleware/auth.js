@@ -1,16 +1,17 @@
-//src/middleware/auth.js
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
 
 const secret = "b88a58a7effe40649cbcd84e5533bb15";
 
-export async function middleware(req) {
-  const cookieStore = cookies();
-  const token = cookieStore.get('token')?.value || '';
+export async function authMiddleware(req) {
+  const token = req.cookies.token || '';
 
   if (!token) {
-    return NextResponse.redirect(new URL('/login', req.url));
+    return {
+      status: 302,
+      headers: {
+        location: '/login'
+      }
+    };
   }
 
   try {
@@ -18,24 +19,38 @@ export async function middleware(req) {
 
     const currentTime = Date.now() / 1000;
     if (decoded.exp < currentTime) {
-      return NextResponse.redirect(new URL('/login', req.url));
+      return {
+        status: 302,
+        headers: {
+          location: '/login'
+        }
+      };
     }
 
-    // Verifica se o usuário é administrador
-    if (decoded.role !== 'admin') {
-      console.error('Usuário não é administrador');
-      return NextResponse.redirect(new URL('/', req.url));
-    }
+    // Verificar se o usuário é administrador, se necessário
+    // if (decoded.role !== 'admin') {
+    //   console.error('Usuário não é administrador');
+    //   return {
+    //     status: 302,
+    //     headers: {
+    //       location: '/'
+    //     }
+    //   };
+    // }
 
-    cookieStore.set('token', token, { httpOnly: true, sameSite: 'strict', secure: true });
+    // Atualiza o token no cookie
+    req.cookies.token = token;
 
-    return NextResponse.next();
+    return {
+      next: {}
+    };
   } catch (error) {
     console.error('Erro de autenticação:', error.message);
-    return NextResponse.redirect(new URL('/login', req.url));
+    return {
+      status: 302,
+      headers: {
+        location: '/login'
+      }
+    };
   }
 }
-
-export const config = {
-  matcher: '/admin/:path*',
-};

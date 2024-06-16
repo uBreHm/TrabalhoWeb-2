@@ -35,7 +35,7 @@ export async function checkAdmin(token) {
         Authorization: `Bearer ${token}`,
       },
     });
-    if (!response.ok) {
+    if (!response.ok || response.status === 'off') {
       throw new Error("Usuário não é administrador");
     }
     return response.json();
