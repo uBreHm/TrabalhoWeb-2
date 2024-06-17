@@ -10,7 +10,7 @@ export async function authMiddleware({ url, cookies }) {
   }
 
   try {
-    const decoded = jwt.verify(token, secret);
+    //const decoded = jwt.verify(token, secret);
 
     const currentTime = Math.floor(Date.now() / 1000);
     if (decoded.exp < currentTime) {

@@ -23,7 +23,7 @@ module.exports = (req, res, next) => {
       return res.status(403).json({ message: 'Acesso negado. Você não tem permissão de administrador.' });
     }
 
-    if(req.user.status !== 'off'){
+    if(req.user.status === 'off'){
       return res.status(403).json({ message: 'Usuário desativado!' });
     }
 
