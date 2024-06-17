@@ -1,11 +1,9 @@
-// pages/admin/dashboard.js
-
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import { checkAdmin } from '../api/hello';
+import Navbar from '../../components/navbar'; // Certifique-se de que o caminho está correto
 import styles from '../../styles/dashboard.module.css';
-import Nav from '@/components/nav'; // Importe o componente Nav corretamente
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -46,10 +44,10 @@ export default function AdminDashboard() {
 
   return (
     <div className={styles.container}>
-      <Nav /> {/* Renderiza o componente Nav */}
+      <Navbar />
       <div className={styles.content}>
         <h1>Admin Dashboard</h1>
-        <p>Bem-vindo, {user.user}!</p>
+        <p>Bem-vindo, administrador!</p>
       </div>
     </div>
   );
