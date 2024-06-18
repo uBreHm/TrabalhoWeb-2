@@ -3,8 +3,7 @@ const app = express();
 const db = require('./db');
 const routes = require('./api/routes');
 const authMiddleware = require('./api/middleware/middleware');
-
-// Middleware
+const admin = require('./api/routes/admin');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -22,27 +21,19 @@ db.once('open', () => {
     console.log('Conexão com o MongoDB estabelecida com sucesso!');
 });
 
-// Defina o segredo JWT diretamente aqui
-const secret = "b88a58a7effe40649cbcd84e5533bb15";
-
-
-// Rotas
 app.use('/api', routes);
 app.use('/auth', require('./api/routes/auth')); // Certifique-se de que está usando a rota correta
 
-// Rotas protegidas
 app.use('/users', authMiddleware, require('./api/routes/users'));
 app.use('/accounts', authMiddleware, require('./api/routes/accounts'));
 app.use('/categories', authMiddleware, require('./api/routes/categories'));
 app.use('/entries', authMiddleware, require('./api/routes/entries'));
 
-// Tratamento de erros
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Erro no servidor!');
 });
 
-// Iniciar o servidor
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`Aplicação executando na porta ${PORT}!`);

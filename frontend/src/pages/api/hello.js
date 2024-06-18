@@ -1,5 +1,4 @@
-// pages/api/hello
-
+// pages/api/hello.js
 const BASE_URL = 'http://localhost:8080/api'; // URL base da sua API Node.js
 
 export async function fetchFromApi(endpoint, options = {}) {
@@ -44,3 +43,19 @@ export async function checkAdmin(token) {
   }
 }
 
+export async function getEntries() {
+  try {
+    const response = await fetch(`${BASE_URL}/entries`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Erro ao buscar entradas');
+    }
+    return response.json();
+  } catch (error) {
+    throw new Error(`Erro ao buscar entradas: ${error.message}`);
+  }
+}

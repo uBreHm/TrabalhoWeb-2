@@ -24,6 +24,22 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/:id', async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const category = await Category.findById(id);
+
+    if (!category) {
+      return res.status(404).json({ message: 'Categoria não encontrada' });
+    }
+
+    res.status(200).json(category);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
 // Inserir uma nova categoria
 // POST "/categories" BODY { ... }
 router.post('/', async (req, res) => {

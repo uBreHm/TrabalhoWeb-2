@@ -18,8 +18,6 @@ const entriesSchema = new mongoose.Schema({
 
 const Entry = mongoose.model('Entry', entriesSchema);
 
-// Retornar todas as entradas
-// GET "/entries"
 router.get('/', async (req, res) => {
   try {
     const entries = await Entry.find();
@@ -30,8 +28,21 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Inserir uma nova entrada
-// POST "/entries" BODY { ... }
+router.get('/:id', async (req, res) => {
+  const id = req.params.id;
+  try {
+    const foundEntry = await Entry.findById(id);
+
+    if (!foundEntry) {
+      return res.status(404).json({ message: 'Entrada não encontrada' });
+    }
+
+    res.status(200).json(foundEntry);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
 router.post('/', async (req, res) => {
   const entry = req.body;
   try {
@@ -43,8 +54,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Alterar uma entrada
-// PUT "/entries/:id" BODY { ... }
 router.put('/:id', async (req, res) => {
   const id = req.params.id;
   const updatedEntry = req.body;
@@ -57,8 +66,6 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// Deletar uma entrada
-// DELETE "/entries/:id"
 router.delete('/:id', async (req, res) => {
   const id = req.params.id;
   try {

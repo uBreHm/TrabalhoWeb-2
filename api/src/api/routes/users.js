@@ -51,19 +51,15 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Inserir um novo usuário
-// POST "/users" BODY { ... }
-router.post('/', async (req, res) => {
-  const userData = req.body; // Atribuir o corpo da solicitação diretamente a userData
 
+router.post('/', async (req, res) => {
+  const userData = req.body;
   try {
-    // Verificar se já existe um usuário com o mesmo email
+
     const existingUser = await User.findOne({ email: userData.email });
     if (existingUser) {
       return res.status(400).json({ message: 'O email já está em uso.' });
     }
-    
-    // Se não houver usuário com o mesmo email, crie o novo usuário
     const newUser = new User(userData);
     await newUser.save();
     console.log('Objeto salvo com sucesso!');
@@ -73,20 +69,18 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Alterar um usuário
-// PUT "/users/:id" BODY { ... }
+
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
   const updatedUserData = req.body;
 
   try {
-    // Verifique se o usuário que está sendo atualizado existe
+
     const existingUser = await User.findById(id);
     if (!existingUser) {
       return res.status(404).json({ message: 'Usuário não encontrado.' });
     }
 
-    // Atualize os campos do usuário com os dados fornecidos
     existingUser.name = updatedUserData.name;
     existingUser.email = updatedUserData.email;
     existingUser.user = updatedUserData.user;
@@ -96,7 +90,6 @@ router.put('/:id', async (req, res) => {
     existingUser.level = updatedUserData.level;
     existingUser.status = updatedUserData.status;
 
-    // Salve as alterações no banco de dados
     const updatedUser = await existingUser.save();
     console.log('Objeto Atualizado:', updatedUser);
     res.json({ message: 'Usuário alterado com sucesso!', updatedUser });
@@ -105,8 +98,6 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// Deletar um usuário
-// DELETE "/users/:id"
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
   try {

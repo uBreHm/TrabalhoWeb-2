@@ -11,6 +11,6 @@ router.use('/users', users);
 router.use('/accounts', accounts);
 router.use('/categories', categories);
 router.use('/entries', entries);
-router.use('/auth', auth); // Mudar de '/login' para '/auth'
+router.use('/auth', auth); 
 
 module.exports = router;

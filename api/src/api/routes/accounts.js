@@ -23,6 +23,20 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/:id', async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const account = await Account.findById(id);
+    if (!account) {
+      return res.status(404).json({ message: 'Conta não encontrada' });
+    }
+    res.status(200).json(account);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
 // Inserir uma nova conta
 // POST "/accounts" BODY { ... }
 router.post('/', async (req, res) => {

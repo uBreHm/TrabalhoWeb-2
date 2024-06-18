@@ -5,12 +5,10 @@ const User = require('../routes/users');
 const Account = require('../routes/accounts');
 const Category = require('../routes/categories');
 const Entry = require('../routes/entries');
-const adminMiddleware = require('../middleware/adminMiddleware'); // Importar o middleware de administração
+const adminMiddleware = require('../middleware/middleware'); // Importar o middleware de administração
 
-// Aplicar o middleware de administração para todas as rotas neste arquivo
 router.use(adminMiddleware);
 
-// CRUD de Receitas e Despesas (Entries)
 router.get('/entries', async (req, res) => {
     try {
         const entries = await Entry.find();
@@ -20,7 +18,7 @@ router.get('/entries', async (req, res) => {
     }
 });
 
-router.post('/entries', async (req, res) => {
+router.post('/getentries', async (req, res) => {
     const entry = req.body;
     try {
         const newEntry = await Entry.create(entry);

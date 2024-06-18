@@ -1,6 +1,5 @@
-// src/components/Message.js
-import styles from '../styles/message.module.css';
 import PropTypes from 'prop-types';
+import styles from '../styles/message.module.css';
 
 const Message = ({ type, message }) => {
   return (
