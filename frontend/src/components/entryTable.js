@@ -17,7 +17,6 @@ import {
 import { fetchEntries, deleteEntry } from "../pages/api/entries";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import styles from "../styles/tableEntries.module.css";
-import Link from "next/link";
 import { useRouter } from "next/router";
 
 const TableEntries = () => {
@@ -52,7 +51,7 @@ const TableEntries = () => {
   };
 
   const handleEdit = (id) => {
-    router.push(`/admin/pageEntry/${id}`);
+    router.push(`/admin/formEntry/${id}`);
   };
 
   if (loading) {

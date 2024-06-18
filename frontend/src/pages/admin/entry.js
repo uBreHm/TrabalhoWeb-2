@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Box } from "@chakra-ui/react";
 import EntryForm from "@/components/EntryForm";
-import { getEntryById } from "@/pages/api/entries"; // Substitua pelo caminho correto para o seu endpoint de API
+import { getEntryById } from "@/pages/api/entries";
 
 const EntryPage = () => {
   const router = useRouter();
@@ -12,11 +12,10 @@ const EntryPage = () => {
   useEffect(() => {
     const fetchEntry = async () => {
       try {
-        const response = await getEntryById(id); // Implemente a função para obter uma entrada pelo ID
+        const response = await getEntryById(id);
         setEntry(response.data);
       } catch (error) {
         console.error("Error fetching entry:", error);
-        // Redirecionar ou tratar erro conforme necessário
       }
     };
 

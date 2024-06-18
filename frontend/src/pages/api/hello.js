@@ -42,20 +42,3 @@ export async function checkAdmin(token) {
     throw new Error(`Erro ao verificar acesso de administrador: ${error.message}`);
   }
 }
-
-export async function getEntries() {
-  try {
-    const response = await fetch(`${BASE_URL}/entries`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (!response.ok) {
-      throw new Error('Erro ao buscar entradas');
-    }
-    return response.json();
-  } catch (error) {
-    throw new Error(`Erro ao buscar entradas: ${error.message}`);
-  }
-}

@@ -2,21 +2,21 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { Box, Heading, Text } from '@chakra-ui/react';
 import Navbar from '../../../components/navbar';
-import EntryForm from '../../../components/createEditEntry'; // Corrigido o caminho de importação
-import { fetchEntryById } from '../../../pages/api/entries'; // Corrigido o caminho de importação
+import EntryForm from '../../../components/createEditEntry'; 
+import { fetchEntryById } from '../../api/entries';
 
 const PageEntry = () => {
   const router = useRouter();
-  const { id } = router.query; // Captura o parâmetro id da URL
+  const { id } = router.query;
   const [entry, setEntry] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+  useEffect(() =>  {
     const fetchEntry = async () => {
       if (id) {
         try {
-          const data = await fetchEntryById(id); // Função para buscar a entrada por ID
+          const data = await fetchEntryById(id);
           setEntry(data);
         } catch (error) {
           setError(error.message);
@@ -34,7 +34,7 @@ const PageEntry = () => {
   if (loading) {
     return (
       <Box p={5}>
-        <Heading>Loading...</Heading>
+        <Heading>Carregando...</Heading>
       </Box>
     );
   }
