@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { login, checkAdmin } from '../pages/api/hello';
 import { Box, Button, FormControl, FormLabel, Input, Stack } from '@chakra-ui/react';
 import Cookies from 'js-cookie';
-import Message from '../components/messages';
 
 const Login = () => {
   const router = useRouter();
@@ -86,7 +85,6 @@ const Login = () => {
             </Button>
           </Stack>
         </form>
-        {message.text && <Message type={message.type} message={message.text} />}
       </Box>
     </Box>
   );

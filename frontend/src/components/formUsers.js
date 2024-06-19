@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Box, Button, FormControl, FormLabel, Input, Select, useToast } from '@chakra-ui/react';
+import { Box, Button, FormControl, FormLabel, Input, Select, useToast, Heading } from '@chakra-ui/react';
 import { updateUser, createUser, fetchUsersById } from '../pages/api/user';
 import { authMiddleware } from '@/middleware/auth';
 
@@ -58,10 +58,10 @@ const FormUser = () => {
     e.preventDefault();
     try {
       if (id) {
-        await updateUser(id, formData); // Atualiza o usuário se já existir o ID
+        await updateUser(id, formData);
         toast({ title: 'Usuário atualizado com sucesso!', status: 'success' });
       } else {
-        await createUser(formData); // Cria um novo usuário se não existir ID
+        await createUser(formData); 
         toast({ title: 'Usuário criado com sucesso!', status: 'success' });
       }
       router.push('/admin/dashboard');
@@ -71,7 +71,10 @@ const FormUser = () => {
   };
 
   return (
-    <Box maxW="md" mx="auto" mt={8}>
+    <Box maxW="md" mx="auto">
+      <Box mb={4} display="flex" justifyContent="space-between" alignItems="center">
+        <Heading as="h2" size="lg">{id ? 'Editar Usuário' : 'Criar Usuário'}</Heading>
+      </Box>
       <form onSubmit={handleSubmit}>
         <FormControl id="name" isRequired>
           <FormLabel>Nome</FormLabel>

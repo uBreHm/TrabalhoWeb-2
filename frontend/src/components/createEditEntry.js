@@ -9,17 +9,19 @@ import {
   Button,
   Alert,
   AlertIcon,
+  Heading,
 } from "@chakra-ui/react";
 import { useRouter } from 'next/router';
 import { updateEntry, createEntry } from "@/pages/api/entries";
-import { fetchCategories } from "@/pages/api/categories"; // Importe corrigido da função fetchCategories
+import { fetchCategories } from "@/pages/api/categories";
+import { fetchAccounts } from "@/pages/api/accounts";
 
 const EntryForm = ({ entry }) => {
   const router = useRouter();
 
   const [formData, setFormData] = useState({
     type: entry ? entry.type : "",
-    category: entry ? entry.category : "", // Renomeei categories para category para refletir melhor o campo
+    category: entry ? entry.category : "", 
     description: entry ? entry.description : "",
     value: entry ? entry.value : "",
     due_date: entry ? entry.due_date : "",
@@ -30,22 +32,35 @@ const EntryForm = ({ entry }) => {
   });
 
   const [categories, setCategories] = useState([]);
+  const [accounts, setAccounts] = useState([]); // Estado para armazenar os dados das contas
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState("success");
 
   useEffect(() => {
     const fetchCategoriesData = async () => {
       try {
-        const categoriesData = await fetchCategories(); // Chamada para buscar categorias
-        setCategories(categoriesData); // Atualiza o estado com as categorias recebidas
+        const categoriesData = await fetchCategories();
+        setCategories(categoriesData);
       } catch (error) {
         console.error("Erro ao buscar categorias:", error);
-        // Trate o erro ao buscar categorias
       }
     };
 
     fetchCategoriesData();
-  }, []); // [] garante que isso é executado apenas uma vez ao montar o componente
+  }, []);
+
+  useEffect(() => {
+    const fetchAccountsData = async () => {
+      try {
+        const accountsData = await fetchAccounts(); // Busca os dados das contas disponíveis
+        setAccounts(accountsData); // Atualiza o estado com os dados das contas recebidos
+      } catch (error) {
+        console.error("Erro ao buscar contas:", error);
+      }
+    };
+
+    fetchAccountsData();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -72,7 +87,7 @@ const EntryForm = ({ entry }) => {
       }
       setFormData({
         type: "",
-        category: "", // Limpa o campo de categoria
+        category: "",
         description: "",
         value: "",
         due_date: "",
@@ -95,12 +110,17 @@ const EntryForm = ({ entry }) => {
 
   return (
     <Box p={5} ml={5} mt={5} boxShadow="base" borderRadius="md" bg="white" width="80%">
+      <Box mb={4} display="flex" justifyContent="space-between" alignItems="center">
+        <Heading as="h2" size="lg">Criar Entrada</Heading>
+      </Box>
+
       {alertMessage && (
         <Alert status={alertType} mb={4} rounded="md">
           <AlertIcon />
           {alertMessage}
         </Alert>
       )}
+
       <form onSubmit={handleSubmit}>
         <FormControl id="type" mb={4}>
           <FormLabel>Tipo</FormLabel>
@@ -181,8 +201,11 @@ const EntryForm = ({ entry }) => {
             onChange={handleChange}
             required
           >
-            <option value="Conta Corrente">Conta Corrente</option>
-            <option value="Conta Poupança">Conta Poupança</option>
+            {accounts.map((account) => (
+              <option key={account._id} value={account._id}>
+                {account.description} ({account.comments})
+              </option>
+            ))}
           </Select>
         </FormControl>
 

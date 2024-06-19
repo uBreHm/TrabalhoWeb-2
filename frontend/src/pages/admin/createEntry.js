@@ -8,22 +8,16 @@ const CreateEntry = () => {
   return (
     <div>
       <Navbar />
-      <div style={{ marginLeft: '220px', padding: '20px' }}> {/* Ajuste para não sobrepor o navbar fixo */}
-        <h1>Criar Nova Entrada</h1>
+      <div style={{ marginLeft: '220px', padding: '20px' }}>
         <EntryForm />
       </div>
     </div>
   );
 };
 
-export async function getServerSideProps(ctx) {
-  const authResult = await authMiddleware(ctx);
-  if ('redirect' in authResult) {
-    return authResult;
-  }
-  return {
-    props: { ...authResult.props },
-  };
-}
+export const getServerSideProps = async (ctx) => {
+  const { props } = await authMiddleware(ctx);
+  return { props };
+};
 
 export default CreateEntry;

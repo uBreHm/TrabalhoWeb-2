@@ -39,14 +39,9 @@ const EditUser = () => {
   );
 };
 
-export async function getServerSideProps(ctx) {
-  const authResult = await authMiddleware(ctx);
-  if ('redirect' in authResult) {
-    return authResult;
-  }
-  return {
-    props: { ...authResult.props },
-  };
-}
+export const getServerSideProps = async (ctx) => {
+  const { props } = await authMiddleware(ctx);
+  return { props };
+};
 
 export default EditUser;

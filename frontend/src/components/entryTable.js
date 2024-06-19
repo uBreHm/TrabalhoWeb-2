@@ -7,12 +7,12 @@ import {
   Tr,
   Th,
   Td,
-  TableCaption,
   Spinner,
   Center,
   Text,
   IconButton,
   Heading,
+  Button, // Importe o componente Button do Chakra UI
 } from "@chakra-ui/react";
 import { fetchEntries, deleteEntry } from "../pages/api/entries";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
@@ -53,6 +53,10 @@ const TableEntries = () => {
 
   const handleEdit = (id) => {
     router.push(`/admin/formEntry/${id}`);
+  };
+
+  const handleCreate = () => {
+    router.push(`/admin/createEntry`); // Redireciona para a página de criação de usuário
   };
 
   if (loading) {
@@ -138,13 +142,15 @@ const TableEntries = () => {
               ))}
             </Tbody>
           </Table>
-          
         </Box>
+      </Box>
+      <Box mt={4} display="flex" justifyContent="flex-end">
+        <Button colorScheme="teal" onClick={handleCreate}>
+          Criar Lançamento
+        </Button>
       </Box>
     </Box>
   );
 };
-
-
 
 export default TableEntries;

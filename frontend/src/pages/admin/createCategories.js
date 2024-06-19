@@ -1,15 +1,15 @@
-// pages/createEditUsers.js
-import Navbar from '../../components/navbar';
-import FormUser from '../../components/formUsers';
+// pages/admin/createCategory.js
 import { Box } from '@chakra-ui/react';
+import Navbar from '@/components/navbar'; 
+import CategoriesTable from '@/components/categoriesTable'; 
 import { authMiddleware } from '@/middleware/auth';
 
-const CreateUser = () => {
+const CreateCategoryPage = () => {
   return (
     <Box display="flex">
       <Navbar />
-      <Box ml="220px" p={4} width="100%">
-        <FormUser />
+      <Box ml="220px" p={10} flex="1">
+        <CategoriesTable />
       </Box>
     </Box>
   );
@@ -20,4 +20,4 @@ export const getServerSideProps = async (ctx) => {
   return { props };
 };
 
-export default CreateUser;
+export default CreateCategoryPage;

@@ -11,24 +11,24 @@ import {
   Center,
   Text,
   IconButton,
+  Button,
   Heading,
-  Button, // Adicione o componente Button
 } from "@chakra-ui/react";
-import { fetchUsers, deleteUser } from "../pages/api/user";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
+import { fetchCategories, deleteCategory } from "../pages/api/categories"; // Importe a função fetchCategories e deleteCategory da API de categorias
 
-const TableUsers = () => {
+const CategoriesTable = () => {
   const router = useRouter();
-  const [users, setUsers] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchUsers();
-        setUsers(data);
+        const data = await fetchCategories();
+        setCategories(data);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -40,21 +40,21 @@ const TableUsers = () => {
 
   const handleDelete = async (id) => {
     try {
-      await deleteUser(id);
-      const updatedUsers = users.filter((user) => user._id !== id);
-      setUsers(updatedUsers);
-      console.log("Usuário deletado com sucesso!");
+      await deleteCategory(id);
+      const updatedCategories = categories.filter((category) => category._id !== id);
+      setCategories(updatedCategories);
+      console.log("Categoria deletada com sucesso!");
     } catch (error) {
-      console.error("Erro ao deletar usuário:", error);
+      console.error("Erro ao deletar categoria:", error);
     }
   };
 
   const handleEdit = (id) => {
-    router.push(`/admin/formUsers/${id}`);
+    router.push(`/admin/editCategory/${id}`);
   };
 
   const handleCreate = () => {
-    router.push(`/admin/createUsers`); // Redireciona para o formulário sem um ID
+    router.push(`/admin/createCategory`);
   };
 
   if (loading) {
@@ -76,41 +76,35 @@ const TableUsers = () => {
   return (
     <Box p={5} boxShadow="base" borderRadius="md" bg="white" width="100%">
       <Box mb={4} display="flex" justifyContent="space-between" alignItems="center">
-        <Heading as="h2" size="lg">Usuários</Heading>
+        <Heading as="h2" size="lg">Categorias</Heading>
       </Box>
       <Table variant="striped" size="md" colorScheme="gray">
         <Thead>
           <Tr>
-            <Th>Nome</Th>
-            <Th>Email</Th>
-            <Th>Usuário</Th>
-            <Th>Nível</Th>
-            <Th>Status</Th>
+            <Th>Descrição</Th>
+            <Th>Tipo</Th>
             <Th>Ações</Th>
           </Tr>
         </Thead>
         <Tbody>
-          {users.map((user) => (
-            <Tr key={user._id}>
-              <Td>{user.name}</Td>
-              <Td>{user.email}</Td>
-              <Td>{user.user}</Td>
-              <Td>{user.level}</Td>
-              <Td>{user.status}</Td>
+          {categories.map((category) => (
+            <Tr key={category._id}>
+              <Td>{category.description}</Td>
+              <Td>{category.type}</Td>
               <Td>
                 <IconButton
                   variant="ghost"
                   colorScheme="teal"
                   aria-label="Editar"
                   icon={<EditIcon />}
-                  onClick={() => handleEdit(user._id)}
+                  onClick={() => handleEdit(category._id)}
                 />
                 <IconButton
                   variant="ghost"
                   colorScheme="red"
                   aria-label="Deletar"
                   icon={<DeleteIcon />}
-                  onClick={() => handleDelete(user._id)}
+                  onClick={() => handleDelete(category._id)}
                 />
               </Td>
             </Tr>
@@ -119,11 +113,11 @@ const TableUsers = () => {
       </Table>
       <Box mt={4} display="flex" justifyContent="flex-end">
         <Button colorScheme="teal" onClick={handleCreate}>
-          Criar Novo Usuário
+          Criar Nova Categoria
         </Button>
       </Box>
     </Box>
   );
 };
 
-export default TableUsers;
+export default CategoriesTable;
