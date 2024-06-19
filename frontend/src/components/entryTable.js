@@ -18,6 +18,7 @@ import { fetchEntries, deleteEntry } from "../pages/api/entries";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import styles from "../styles/tableEntries.module.css";
 import { useRouter } from "next/router";
+import { authMiddleware } from "@/middleware/auth";
 
 const TableEntries = () => {
   const router = useRouter();
@@ -137,10 +138,13 @@ const TableEntries = () => {
               ))}
             </Tbody>
           </Table>
+          
         </Box>
       </Box>
     </Box>
   );
 };
+
+
 
 export default TableEntries;

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Box, Button, FormControl, FormLabel, Input, Select, useToast } from '@chakra-ui/react';
-import { updateUser, createUser, getUserById } from '../pages/api/user'; // Assumindo que você tenha uma função getUserById
+import { updateUser, createUser, fetchUsersById } from '../pages/api/user';
+import { authMiddleware } from '@/middleware/auth';
 
 const FormUser = () => {
   const [formData, setFormData] = useState({
@@ -21,14 +22,15 @@ const FormUser = () => {
     const fetchUser = async () => {
       if (id) {
         try {
-          const { data } = await getUserById(id);
+          const data = await fetchUsersById(id);
+          const userData = data.foundedUser; // Acesse a estrutura correta da resposta
           setFormData({
-            name: data.name || '',
-            email: data.email || '',
-            user: data.user || '',
+            name: userData.name || '',
+            email: userData.email || '',
+            user: userData.user || '',
             pwd: '',
-            level: data.level || '',
-            status: data.status || ''
+            level: userData.level || '',
+            status: userData.status || ''
           });
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -49,7 +51,7 @@ const FormUser = () => {
   };
 
   const handleCancel = () => {
-    router.push('/admin/dashboard');
+    router.push('/admin/users', authMiddleware);
   };
 
   const handleSubmit = async (e) => {

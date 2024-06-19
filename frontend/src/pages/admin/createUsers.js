@@ -2,6 +2,7 @@
 import Navbar from '../../components/navbar';
 import FormUser from '../../components/formUsers';
 import { Box } from '@chakra-ui/react';
+import { authMiddleware } from '@/middleware/auth';
 
 const CreateUser = () => {
   return (
@@ -14,5 +15,15 @@ const CreateUser = () => {
     </Box>
   );
 };
+
+export async function getServerSideProps(ctx) {
+  const authResult = await authMiddleware(ctx);
+  if ('redirect' in authResult) {
+    return authResult;
+  }
+  return {
+    props: { ...authResult.props },
+  };
+}
 
 export default CreateUser;

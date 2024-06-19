@@ -2,10 +2,11 @@
 
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import FormUser from '../../../components/FormUser'; // Ajuste o caminho conforme necessário
+import FormUser from '../../../components/FormUser';
 import Navbar from '../../../components/Navbar';
 import { Box } from '@chakra-ui/react';
-import { fetchUserById } from '../../api/user'; // Ajuste o caminho conforme necessário
+import { fetchUserById } from '../../api/user';
+import { authMiddleware } from '@/middleware/auth';
 
 const EditUser = () => {
   const [user, setUser] = useState(null);
@@ -37,5 +38,15 @@ const EditUser = () => {
     </Box>
   );
 };
+
+export async function getServerSideProps(ctx) {
+  const authResult = await authMiddleware(ctx);
+  if ('redirect' in authResult) {
+    return authResult;
+  }
+  return {
+    props: { ...authResult.props },
+  };
+}
 
 export default EditUser;

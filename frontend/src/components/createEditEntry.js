@@ -1,5 +1,4 @@
-// components/createEditEntry.js
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   FormControl,
@@ -13,13 +12,14 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from 'next/router';
 import { updateEntry, createEntry } from "@/pages/api/entries";
+import { fetchCategories } from "@/pages/api/categories"; // Importe corrigido da função fetchCategories
 
 const EntryForm = ({ entry }) => {
   const router = useRouter();
 
   const [formData, setFormData] = useState({
     type: entry ? entry.type : "",
-    categories: entry ? entry.categories : "",
+    category: entry ? entry.category : "", // Renomeei categories para category para refletir melhor o campo
     description: entry ? entry.description : "",
     value: entry ? entry.value : "",
     due_date: entry ? entry.due_date : "",
@@ -29,8 +29,23 @@ const EntryForm = ({ entry }) => {
     comments: entry ? entry.comments : "",
   });
 
+  const [categories, setCategories] = useState([]);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState("success");
+
+  useEffect(() => {
+    const fetchCategoriesData = async () => {
+      try {
+        const categoriesData = await fetchCategories(); // Chamada para buscar categorias
+        setCategories(categoriesData); // Atualiza o estado com as categorias recebidas
+      } catch (error) {
+        console.error("Erro ao buscar categorias:", error);
+        // Trate o erro ao buscar categorias
+      }
+    };
+
+    fetchCategoriesData();
+  }, []); // [] garante que isso é executado apenas uma vez ao montar o componente
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,7 +72,7 @@ const EntryForm = ({ entry }) => {
       }
       setFormData({
         type: "",
-        categories: "",
+        category: "", // Limpa o campo de categoria
         description: "",
         value: "",
         due_date: "",
@@ -68,7 +83,7 @@ const EntryForm = ({ entry }) => {
       });
       setAlertType("success");
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Erro:", error);
       setAlertType("error");
       setAlertMessage("Erro ao enviar entrada. Por favor, tente novamente.");
     }
@@ -100,14 +115,20 @@ const EntryForm = ({ entry }) => {
           </Select>
         </FormControl>
 
-        <FormControl id="categories" mb={4}>
+        <FormControl id="category" mb={4}>
           <FormLabel>Categoria</FormLabel>
-          <Input
-            name="categories"
-            value={formData.categories}
+          <Select
+            name="category"
+            value={formData.category}
             onChange={handleChange}
             required
-          />
+          >
+            {categories.map((category) => (
+              <option key={category._id} value={category._id}>
+                {category.description}
+              </option>
+            ))}
+          </Select>
         </FormControl>
 
         <FormControl id="description" mb={4}>

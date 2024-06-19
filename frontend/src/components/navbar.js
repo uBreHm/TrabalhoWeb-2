@@ -47,7 +47,7 @@ const Navbar = () => {
             Contas
           </Button>
         </NextLink>
-        <NextLink href='/admin/user' passHref>
+        <NextLink href='/admin/users' passHref>
           <Button colorScheme="teal" variant="ghost" width="100%" textAlign="left">
             Usuários
           </Button>

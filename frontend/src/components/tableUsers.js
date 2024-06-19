@@ -1,4 +1,3 @@
-// components/TableUsers.js
 import { useEffect, useState } from "react";
 import {
   Box,
@@ -13,6 +12,7 @@ import {
   Text,
   IconButton,
   Heading,
+  Button, // Adicione o componente Button
 } from "@chakra-ui/react";
 import { fetchUsers, deleteUser } from "../pages/api/user";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
@@ -36,7 +36,7 @@ const TableUsers = () => {
       }
     };
     fetchData();
-  }, []); // Apenas executa uma vez no início
+  }, []);
 
   const handleDelete = async (id) => {
     try {
@@ -50,8 +50,11 @@ const TableUsers = () => {
   };
 
   const handleEdit = (id) => {
-    console.log('asda');
     router.push(`/admin/formUsers/${id}`);
+  };
+
+  const handleCreate = () => {
+    router.push(`/admin/createUsers`); // Redireciona para o formulário sem um ID
   };
 
   if (loading) {
@@ -71,54 +74,54 @@ const TableUsers = () => {
   }
 
   return (
-    <Box display="flex">
-      <Box p={5} boxShadow="base" borderRadius="md" bg="white" width="100%">
-        <Box mb={4}>
-          <Heading as="h2" size="lg" mb={4}>
-            Usuários
-          </Heading>
-          <Table variant="striped" size="md" colorScheme="gray">
-            <Thead>
-              <Tr>
-                <Th>Nome</Th>
-                <Th>Email</Th>
-                <Th>Usuário</Th>
-                <Th>Nível</Th>
-                <Th>Status</Th>
-                <Th>Ações</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {users.map((user) => (
-                <Tr key={user._id}>
-                  <Td>{user.name}</Td>
-                  <Td>{user.email}</Td>
-                  <Td>{user.user}</Td>
-                  <Td>{user.level}</Td>
-                  <Td>{user.status}</Td>
-                  <Td>
-                    <IconButton
-                      as="button"
-                      variant="ghost"
-                      colorScheme="teal"
-                      aria-label="Editar"
-                      icon={<EditIcon />}
-                      onClick={() => handleEdit(user._id)}
-                    />
-                    <IconButton
-                      variant="ghost"
-                      colorScheme="red"
-                      aria-label="Deletar"
-                      icon={<DeleteIcon />}
-                      onClick={() => handleDelete(user._id)}
-                    />
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </Box>
+    <Box p={5} boxShadow="base" borderRadius="md" bg="white" width="100%">
+      <Box mb={4} display="flex" justifyContent="space-between" alignItems="center">
+        <Heading as="h2" size="lg">Usuários</Heading>
       </Box>
+      <Table variant="striped" size="md" colorScheme="gray">
+        <Thead>
+          <Tr>
+            <Th>Nome</Th>
+            <Th>Email</Th>
+            <Th>Usuário</Th>
+            <Th>Nível</Th>
+            <Th>Status</Th>
+            <Th>Ações</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {users.map((user) => (
+            <Tr key={user._id}>
+              <Td>{user.name}</Td>
+              <Td>{user.email}</Td>
+              <Td>{user.user}</Td>
+              <Td>{user.level}</Td>
+              <Td>{user.status}</Td>
+              <Td>
+                <IconButton
+                  variant="ghost"
+                  colorScheme="teal"
+                  aria-label="Editar"
+                  icon={<EditIcon />}
+                  onClick={() => handleEdit(user._id)}
+                />
+                <IconButton
+                  variant="ghost"
+                  colorScheme="red"
+                  aria-label="Deletar"
+                  icon={<DeleteIcon />}
+                  onClick={() => handleDelete(user._id)}
+                />
+              </Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+      <Box mt={4} display="flex" justifyContent="flex-end">
+      <Button colorScheme="teal" onClick={handleCreate}>
+        Criar Novo Usuário
+      </Button>
+    </Box>
     </Box>
   );
 };

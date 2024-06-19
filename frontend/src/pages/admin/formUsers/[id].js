@@ -3,7 +3,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Box } from "@chakra-ui/react";
-import FormUser from "@/components/formUsers"; 
+import FormUser from "@/components/formUsers";
 import Navbar from "@/components/navbar";
 import { fetchUsersById } from "../../api/user";
 
@@ -26,6 +26,7 @@ const UserPage = () => {
       fetchUser();
     }
   }, [id]);
+
 
   return (
     <Box>

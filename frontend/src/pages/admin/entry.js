@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Box } from "@chakra-ui/react";
 import EntryForm from "@/components/EntryForm";
 import { getEntryById } from "@/pages/api/entries";
+import { authMiddleware } from "@/middleware/auth";
 
 const EntryPage = () => {
   const router = useRouter();
@@ -30,5 +31,15 @@ const EntryPage = () => {
     </Box>
   );
 };
+
+export async function getServerSideProps(ctx) {
+  const authResult = await authMiddleware(ctx);
+  if ('redirect' in authResult) {
+    return authResult;
+  }
+  return {
+    props: { ...authResult.props },
+  };
+}
 
 export default EntryPage;
