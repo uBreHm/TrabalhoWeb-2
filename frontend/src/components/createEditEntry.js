@@ -1,4 +1,4 @@
-//components/createEditEntry
+// components/createEditEntry.js
 import { useState } from "react";
 import {
   Box,
@@ -11,14 +11,12 @@ import {
   Alert,
   AlertIcon,
 } from "@chakra-ui/react";
-import axios from "axios";
 import { useRouter } from 'next/router';
-import { updateEntry } from "@/pages/api/entries";
+import { updateEntry, createEntry } from "@/pages/api/entries";
 
 const EntryForm = ({ entry }) => {
   const router = useRouter();
 
-  // Inicialização simples do estado
   const [formData, setFormData] = useState({
     type: entry ? entry.type : "",
     categories: entry ? entry.categories : "",
@@ -34,7 +32,6 @@ const EntryForm = ({ entry }) => {
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState("success");
 
-  // Função para lidar com a mudança nos inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -43,7 +40,6 @@ const EntryForm = ({ entry }) => {
     }));
   };
 
-  // Função para lidar com o envio do formulário
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -54,8 +50,10 @@ const EntryForm = ({ entry }) => {
 
       if (entry) {
         await updateEntry(`${entry._id}`, dataToSend);
+        setAlertMessage("Entrada atualizada com sucesso!");
       } else {
-        await axios.post(dataToSend);
+        await createEntry(dataToSend);
+        setAlertMessage("Entrada criada com sucesso!");
       }
       setFormData({
         type: "",
@@ -69,7 +67,6 @@ const EntryForm = ({ entry }) => {
         comments: "",
       });
       setAlertType("success");
-      setAlertMessage(entry ? "Entrada atualizada com sucesso!" : "Entrada criada com sucesso!");
     } catch (error) {
       console.error("Error:", error);
       setAlertType("error");
@@ -126,7 +123,7 @@ const EntryForm = ({ entry }) => {
         <FormControl id="value" mb={4}>
           <FormLabel>Valor</FormLabel>
           <Input
-            type="text" // Mantido como texto para formatação
+            type="text"
             name="value"
             value={formData.value}
             onChange={handleChange}
@@ -157,12 +154,15 @@ const EntryForm = ({ entry }) => {
 
         <FormControl id="account" mb={4}>
           <FormLabel>Conta</FormLabel>
-          <Input
+          <Select
             name="account"
             value={formData.account}
             onChange={handleChange}
             required
-          />
+          >
+            <option value="Conta Corrente">Conta Corrente</option>
+            <option value="Conta Poupança">Conta Poupança</option>
+          </Select>
         </FormControl>
 
         <FormControl id="status" mb={4}>
@@ -192,7 +192,7 @@ const EntryForm = ({ entry }) => {
         <Button colorScheme="teal" type="submit">
           {entry ? "Atualizar Entrada" : "Criar Entrada"}
         </Button>
-        <Button colorScheme="gray" type="submit" onClick={handleCancel} m={5}>
+        <Button colorScheme="gray" onClick={handleCancel} m={5}>
           Cancelar
         </Button>
       </form>

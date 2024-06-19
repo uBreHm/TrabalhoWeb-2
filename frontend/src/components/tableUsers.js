@@ -50,7 +50,8 @@ const TableUsers = () => {
   };
 
   const handleEdit = (id) => {
-    router.push(`/admin/formUser/${id}`);
+    console.log('asda');
+    router.push(`/admin/formUsers/${id}`);
   };
 
   if (loading) {

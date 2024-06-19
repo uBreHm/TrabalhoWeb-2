@@ -1,12 +1,20 @@
 // middleware/auth.js
-import { checkAdmin } from '@/pages/api/hello';
 import jwt from 'jsonwebtoken';
+import { checkAdmin } from '@/pages/api/hello';
 
-export async function authMiddleware({ url, cookies }) {
-  const token = extractTokenFromCookies(cookies);
+const secret = 'b88a58a7effe40649cbcd84e5533bb15'; // Defina seu segredo aqui ou use variáveis de ambiente
+
+export async function authMiddleware(ctx) {
+  const { req, res } = ctx;
+  const token = extractTokenFromCookies(req.cookies);
 
   if (!token) {
-    return { next: { pathname: '/login' } }; 
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
   }
 
   try {
@@ -14,19 +22,33 @@ export async function authMiddleware({ url, cookies }) {
 
     const currentTime = Math.floor(Date.now() / 1000);
     if (decoded.exp < currentTime) {
-      return { next: { pathname: '/login' } }; 
+      return {
+        redirect: {
+          destination: '/login',
+          permanent: false,
+        },
+      };
     }
 
-    
     const isAdminResponse = await checkAdmin(token);
-    if(isAdminResponse.isAdmin){
-      return true;
+    if (isAdminResponse.isAdmin) {
+      return { props: { isAdmin: true } }; 
     }
 
-    return { next: null }; 
+    return {
+      redirect: {
+        destination: '/unauthorized',
+        permanent: false,
+      },
+    };
   } catch (error) {
     console.error('Erro de autenticação:', error.message);
-    return { next: { pathname: '/login' } }; 
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
   }
 }
 
@@ -38,4 +60,3 @@ function extractTokenFromCookies(cookies) {
 
   return token || '';
 }
-

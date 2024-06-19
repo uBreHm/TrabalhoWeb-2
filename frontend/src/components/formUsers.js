@@ -1,11 +1,9 @@
-// components/FormUser.js
-
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Box, Button, FormControl, FormLabel, Input, Select, useToast } from '@chakra-ui/react';
-import { updateUser, createUser, fetchUserById } from '../pages/api/user';
+import { updateUser, createUser, getUserById } from '../pages/api/user'; // Assumindo que você tenha uma função getUserById
 
-const FormUser = ({ userData }) => {
+const FormUser = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -16,20 +14,31 @@ const FormUser = ({ userData }) => {
   });
 
   const router = useRouter();
+  const { id } = router.query;
   const toast = useToast();
 
   useEffect(() => {
-    if (userData) {
-      setFormData({
-        name: userData.name || '',
-        email: userData.email || '',
-        user: userData.user || '',
-        pwd: '',
-        level: userData.level || '',
-        status: userData.status || ''
-      });
-    }
-  }, [userData]);
+    const fetchUser = async () => {
+      if (id) {
+        try {
+          const { data } = await getUserById(id);
+          setFormData({
+            name: data.name || '',
+            email: data.email || '',
+            user: data.user || '',
+            pwd: '',
+            level: data.level || '',
+            status: data.status || ''
+          });
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+          toast({ title: 'Erro ao buscar dados do usuário.', description: error.message, status: 'error' });
+        }
+      }
+    };
+
+    fetchUser();
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,8 +55,8 @@ const FormUser = ({ userData }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (userData.id) {
-        await updateUser(userData.id, formData); // Atualiza o usuário se já existir o ID
+      if (id) {
+        await updateUser(id, formData); // Atualiza o usuário se já existir o ID
         toast({ title: 'Usuário atualizado com sucesso!', status: 'success' });
       } else {
         await createUser(formData); // Cria um novo usuário se não existir ID
@@ -93,7 +102,7 @@ const FormUser = ({ userData }) => {
           </Select>
         </FormControl>
         <Button type="submit" colorScheme="teal" mt={4}>
-          {userData.id ? 'Atualizar' : 'Criar'} Usuário
+          {id ? 'Atualizar' : 'Criar'} Usuário
         </Button>
         <Button onClick={handleCancel} colorScheme="gray" mt={4} ml={3}>
           Cancelar

@@ -7,11 +7,10 @@ const HomePage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // Redireciona para a página de login assim que a página inicial for carregada
     router.replace('/login');
   }, []);
 
-  return null; // Não renderiza nada na página inicial
+  return null; 
 };
 
 export default HomePage;

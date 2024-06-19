@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Box } from "@chakra-ui/react";
 import FormUser from "@/components/formUsers"; 
 import Navbar from "@/components/navbar";
-import { fetchUserById } from "../../../pages/api/user";
+import { fetchUsersById } from "../../api/user";
 
 const UserPage = () => {
   const router = useRouter();
@@ -15,7 +15,7 @@ const UserPage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const userData = await fetchUserById(id);
+        const userData = await fetchUsersById(id);
         setUser(userData);
       } catch (error) {
         console.error("Erro ao buscar usuário:", error);
@@ -30,7 +30,7 @@ const UserPage = () => {
   return (
     <Box>
       <Navbar />
-      <Box ml="220px" p={4} width="100%">
+      <Box p={4} width="100%">
         <h1>Editar Usuário</h1>
         {user ? (
           <FormUser userData={user} /> // Passe os dados do usuário para o componente FormUser
