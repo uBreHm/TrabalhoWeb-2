@@ -19,20 +19,21 @@ import { fetchAccounts } from "@/pages/api/accounts";
 const EntryForm = ({ entry }) => {
   const router = useRouter();
 
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     type: entry ? entry.type : "",
-    category: entry ? entry.category : "", 
+    category: entry ? entry.category : "", // Armazena o ID da categoria
     description: entry ? entry.description : "",
     value: entry ? entry.value : "",
     due_date: entry ? entry.due_date : "",
     payment_date: entry ? entry.payment_date : "",
-    account: entry ? entry.account : "",
+    account: entry ? entry.account : "", 
     status: entry ? entry.status : "",
     comments: entry ? entry.comments : "",
-  });
+  };
 
+  const [formData, setFormData] = useState(initialFormData);
   const [categories, setCategories] = useState([]);
-  const [accounts, setAccounts] = useState([]); // Estado para armazenar os dados das contas
+  const [accounts, setAccounts] = useState([]);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState("success");
 
@@ -40,7 +41,7 @@ const EntryForm = ({ entry }) => {
     const fetchCategoriesData = async () => {
       try {
         const categoriesData = await fetchCategories();
-        setCategories(categoriesData);
+        setCategories(categoriesData); 
       } catch (error) {
         console.error("Erro ao buscar categorias:", error);
       }
@@ -52,8 +53,8 @@ const EntryForm = ({ entry }) => {
   useEffect(() => {
     const fetchAccountsData = async () => {
       try {
-        const accountsData = await fetchAccounts(); // Busca os dados das contas disponíveis
-        setAccounts(accountsData); // Atualiza o estado com os dados das contas recebidos
+        const accountsData = await fetchAccounts();
+        setAccounts(accountsData); // Atualiza o estado com os dados das contas
       } catch (error) {
         console.error("Erro ao buscar contas:", error);
       }
@@ -85,17 +86,7 @@ const EntryForm = ({ entry }) => {
         await createEntry(dataToSend);
         setAlertMessage("Entrada criada com sucesso!");
       }
-      setFormData({
-        type: "",
-        category: "",
-        description: "",
-        value: "",
-        due_date: "",
-        payment_date: "",
-        account: "",
-        status: "",
-        comments: "",
-      });
+      setFormData(initialFormData); // Limpa o formulário após submissão
       setAlertType("success");
     } catch (error) {
       console.error("Erro:", error);
@@ -130,6 +121,7 @@ const EntryForm = ({ entry }) => {
             onChange={handleChange}
             required
           >
+            <option value="">Selecione o Tipo</option>
             <option value="Despesa">Despesa</option>
             <option value="Receita">Receita</option>
           </Select>
@@ -143,6 +135,7 @@ const EntryForm = ({ entry }) => {
             onChange={handleChange}
             required
           >
+            <option value="">Selecione a Categoria</option>
             {categories.map((category) => (
               <option key={category._id} value={category._id}>
                 {category.description}
@@ -201,8 +194,9 @@ const EntryForm = ({ entry }) => {
             onChange={handleChange}
             required
           >
+            <option value="">Selecione a Conta</option>
             {accounts.map((account) => (
-              <option key={account._id} value={account._id}>
+              <option key={account._id} value={account.description}>
                 {account.description} ({account.comments})
               </option>
             ))}
@@ -217,6 +211,7 @@ const EntryForm = ({ entry }) => {
             onChange={handleChange}
             required
           >
+            <option value="">Selecione o Status</option>
             <option value="Lancada">Lançada</option>
             <option value="Confirmada">Confirmada</option>
             <option value="Paga">Paga</option>
