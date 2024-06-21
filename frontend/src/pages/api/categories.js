@@ -39,9 +39,9 @@ export async function updateCategories(userId, userData) {
   }
 }
 
-export async function deleteCategories(userId) {
+export async function deleteCategories(id) {
   try {
-    const response = await axios.delete(`${BASE_URL}/categories/${userId}`);
+    const response = await axios.delete(`${BASE_URL}/categories/${id}`);
     return response.data;
   } catch (error) {
     throw new Error(`Erro ao deletar categoria: ${error.message}`);

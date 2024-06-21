@@ -21,12 +21,13 @@ const EntryForm = ({ entry }) => {
 
   const initialFormData = {
     type: entry ? entry.type : "",
-    category: entry ? entry.category : "", // Armazena o ID da categoria
+    category: entry ? entry.category?._id : "",
+    categoryDescription: entry ? entry.category?.description : "",
     description: entry ? entry.description : "",
     value: entry ? entry.value : "",
-    due_date: entry ? entry.due_date : "",
-    payment_date: entry ? entry.payment_date : "",
-    account: entry ? entry.account : "", 
+    due_date: entry ? entry.due_date.split('T')[0] : "",
+    payment_date: entry ? (entry.payment_date ? entry.payment_date.split('T')[0] : "") : "",
+    account: entry ? entry.account : "",
     status: entry ? entry.status : "",
     comments: entry ? entry.comments : "",
   };
@@ -41,7 +42,7 @@ const EntryForm = ({ entry }) => {
     const fetchCategoriesData = async () => {
       try {
         const categoriesData = await fetchCategories();
-        setCategories(categoriesData); 
+        setCategories(categoriesData);
       } catch (error) {
         console.error("Erro ao buscar categorias:", error);
       }
@@ -54,7 +55,7 @@ const EntryForm = ({ entry }) => {
     const fetchAccountsData = async () => {
       try {
         const accountsData = await fetchAccounts();
-        setAccounts(accountsData); // Atualiza o estado com os dados das contas
+        setAccounts(accountsData);
       } catch (error) {
         console.error("Erro ao buscar contas:", error);
       }
@@ -65,11 +66,26 @@ const EntryForm = ({ entry }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+
+    if (name === 'category') {
+      const selectedCategoryId = value; // Aqui pegamos o ID da categoria selecionada diretamente do evento
+      const selectedCategory = categories.find(category => category._id === selectedCategoryId);
+
+      if (selectedCategory) {
+        setFormData((prevData) => ({
+          ...prevData,
+          category: selectedCategory._id, // Atualizamos o ID da categoria selecionada
+          categoryDescription: selectedCategory.description,
+        }));
+      }
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -77,13 +93,18 @@ const EntryForm = ({ entry }) => {
       const dataToSend = {
         ...formData,
         value: parseFloat(formData.value).toFixed(2),
+        category: formData.category, // Aqui estamos enviando o ID da categoria
+        due_date: formData.due_date,
+        payment_date: formData.payment_date,
       };
 
       if (entry) {
         await updateEntry(`${entry._id}`, dataToSend);
+        router.push('/admin/dashboard');
         setAlertMessage("Entrada atualizada com sucesso!");
       } else {
         await createEntry(dataToSend);
+        router.push('/admin/dashboard');
         setAlertMessage("Entrada criada com sucesso!");
       }
       setFormData(initialFormData); // Limpa o formulário após submissão
@@ -102,7 +123,7 @@ const EntryForm = ({ entry }) => {
   return (
     <Box p={5} ml={5} mt={5} boxShadow="base" borderRadius="md" bg="white" width="80%">
       <Box mb={4} display="flex" justifyContent="space-between" alignItems="center">
-        <Heading as="h2" size="lg">Criar Entrada</Heading>
+        <Heading as="h2" size="lg">{entry ? "Editar Entrada" : "Criar Entrada"}</Heading>
       </Box>
 
       {alertMessage && (
@@ -121,9 +142,12 @@ const EntryForm = ({ entry }) => {
             onChange={handleChange}
             required
           >
-            <option value="">Selecione o Tipo</option>
-            <option value="Despesa">Despesa</option>
-            <option value="Receita">Receita</option>
+            <option value="">Selecione o tipo</option>
+            {categories.map((category) => (
+              <option key={category._id} value={category.type}>
+                {category.type}
+              </option>
+            ))}
           </Select>
         </FormControl>
 

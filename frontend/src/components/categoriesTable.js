@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
-import { fetchCategories, deleteCategory } from "../pages/api/categories"; // Importe a função fetchCategories e deleteCategory da API de categorias
+import { fetchCategories, deleteCategories } from "../pages/api/categories"; // Importe a função fetchCategories e deleteCategory da API de categorias
 
 const CategoriesTable = () => {
   const router = useRouter();
@@ -40,7 +40,7 @@ const CategoriesTable = () => {
 
   const handleDelete = async (id) => {
     try {
-      await deleteCategory(id);
+      await deleteCategories(id);
       const updatedCategories = categories.filter((category) => category._id !== id);
       setCategories(updatedCategories);
       console.log("Categoria deletada com sucesso!");
@@ -50,11 +50,11 @@ const CategoriesTable = () => {
   };
 
   const handleEdit = (id) => {
-    router.push(`/admin/editCategory/${id}`);
+    router.push(`/admin/formCategories/${id}`);
   };
 
   const handleCreate = () => {
-    router.push(`/admin/createCategory`);
+    router.push(`/admin/createCategories`);
   };
 
   if (loading) {

@@ -27,17 +27,7 @@ const Navbar = () => {
             Lançamentos
           </Button>
         </NextLink>
-        <NextLink href="/admin/recipes" passHref>
-          <Button colorScheme="teal" variant="ghost" width="100%" textAlign="left">
-            Receitas
-          </Button>
-        </NextLink>
-        <NextLink href="/admin/expenses" passHref>
-          <Button colorScheme="teal" variant="ghost" width="100%" textAlign="left">
-            Despesas
-          </Button>
-        </NextLink>
-        <NextLink href="/admin/createCategories" passHref>
+        <NextLink href="/admin/categories" passHref>
           <Button colorScheme="teal" variant="ghost" width="100%" textAlign="left">
             Categorias
           </Button>

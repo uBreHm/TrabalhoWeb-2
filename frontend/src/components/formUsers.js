@@ -23,7 +23,7 @@ const FormUser = () => {
       if (id) {
         try {
           const data = await fetchUsersById(id);
-          const userData = data.foundedUser; // Acesse a estrutura correta da resposta
+          const userData = data.foundedUser;
           setFormData({
             name: userData.name || '',
             email: userData.email || '',
@@ -33,7 +33,6 @@ const FormUser = () => {
             status: userData.status || ''
           });
         } catch (error) {
-          console.error("Error fetching user data:", error);
           toast({ title: 'Erro ao buscar dados do usuário.', description: error.message, status: 'error' });
         }
       }
@@ -61,10 +60,10 @@ const FormUser = () => {
         await updateUser(id, formData);
         toast({ title: 'Usuário atualizado com sucesso!', status: 'success' });
       } else {
-        await createUser(formData); 
+        await createUser(formData);
         toast({ title: 'Usuário criado com sucesso!', status: 'success' });
       }
-      router.push('/admin/dashboard');
+      router.push('/admin/users');
     } catch (err) {
       toast({ title: 'Erro ao salvar usuário.', description: err.message, status: 'error' });
     }
@@ -95,6 +94,7 @@ const FormUser = () => {
         <FormControl id="level" isRequired mt={4}>
           <FormLabel>Nível</FormLabel>
           <Select name="level" value={formData.level} onChange={handleChange}>
+            <option value="">Selecione</option>
             <option value="admin">Admin</option>
             <option value="user">User</option>
           </Select>
@@ -102,6 +102,7 @@ const FormUser = () => {
         <FormControl id="status" isRequired mt={4}>
           <FormLabel>Status</FormLabel>
           <Select name="status" value={formData.status} onChange={handleChange}>
+            <option value="">Selecione</option>
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
           </Select>
