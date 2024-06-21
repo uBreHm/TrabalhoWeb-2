@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Box } from "@chakra-ui/react";
-import EntryForm from "@/components/EntryForm";
-import { getEntryById } from "@/pages/api/entries";
+import EntryForm from "@/components/createEditEntry";
+import { fetchEntryById } from "@/pages/api/entries";
 import { authMiddleware } from "@/middleware/auth";
 
 const EntryPage = () => {
@@ -13,7 +13,7 @@ const EntryPage = () => {
   useEffect(() => {
     const fetchEntry = async () => {
       try {
-        const response = await getEntryById(id);
+        const response = await fetchEntryById(id);
         setEntry(response.data);
       } catch (error) {
         console.error("Error fetching entry:", error);

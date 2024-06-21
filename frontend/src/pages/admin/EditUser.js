@@ -2,10 +2,10 @@
 
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import FormUser from '../../../components/FormUser';
-import Navbar from '../../../components/Navbar';
+import FormUser from '../../components/formUsers';
+import Navbar from '../../components/navbar';
 import { Box } from '@chakra-ui/react';
-import { fetchUserById } from '../../api/user';
+import { fetchUser } from '../api/user';
 import { authMiddleware } from '@/middleware/auth';
 
 const EditUser = () => {
@@ -30,7 +30,7 @@ const EditUser = () => {
 
   return (
     <Box display="flex">
-      <Navbar />
+      <Navbar/>
       <Box ml="220px" p={4} width="100%">
         <h1>Editar Usuário</h1>
         {user ? <FormUser userId={id} /> : <p>Carregando...</p>}

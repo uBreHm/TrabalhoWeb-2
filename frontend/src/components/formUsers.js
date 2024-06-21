@@ -23,7 +23,7 @@ const FormUser = () => {
       if (id) {
         try {
           const data = await fetchUsersById(id);
-          const userData = data.foundedUser;
+          const userData = data.foundedUser; 
           setFormData({
             name: userData.name || '',
             email: userData.email || '',
@@ -60,7 +60,7 @@ const FormUser = () => {
         await updateUser(id, formData);
         toast({ title: 'Usuário atualizado com sucesso!', status: 'success' });
       } else {
-        await createUser(formData);
+        await createUser(formData); 
         toast({ title: 'Usuário criado com sucesso!', status: 'success' });
       }
       router.push('/admin/users');

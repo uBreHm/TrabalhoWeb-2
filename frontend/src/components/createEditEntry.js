@@ -1,50 +1,33 @@
-import { useState, useEffect } from "react";
-import {
-  Box,
-  FormControl,
-  FormLabel,
-  Input,
-  Select,
-  Textarea,
-  Button,
-  Alert,
-  AlertIcon,
-  Heading,
-} from "@chakra-ui/react";
-import { useRouter } from 'next/router';
-import { updateEntry, createEntry } from "@/pages/api/entries";
-import { fetchCategories } from "@/pages/api/categories";
-import { fetchAccounts } from "@/pages/api/accounts";
+// components/EntryForm.jsx
+import { useState, useEffect } from 'react';
+import { Select, Input, FormControl, FormLabel, Button, Stack } from '@chakra-ui/react';
+import { fetchCategories } from '@/pages/api/categories';
+import { fetchEntryById, createEntry, updateEntry } from '@/pages/api/entries';
 
-const EntryForm = ({ entry }) => {
-  const router = useRouter();
+const EntryForm = ({ entryId, onSubmit }) => {
+  const [formData, setFormData] = useState({
+    type: 'Despesa',
+    categories: '',
+    description: '',
+    value: '',
+    due_date: '',
+    payment_date: '',
+    account: '',
+    status: 'Paga',
+    comments: '',
+  });
 
-  const initialFormData = {
-    type: entry ? entry.type : "",
-    category: entry ? entry.category?._id : "",
-    categoryDescription: entry ? entry.category?.description : "",
-    description: entry ? entry.description : "",
-    value: entry ? entry.value : "",
-    due_date: entry ? entry.due_date.split('T')[0] : "",
-    payment_date: entry ? (entry.payment_date ? entry.payment_date.split('T')[0] : "") : "",
-    account: entry ? entry.account : "",
-    status: entry ? entry.status : "",
-    comments: entry ? entry.comments : "",
-  };
-
-  const [formData, setFormData] = useState(initialFormData);
-  const [categories, setCategories] = useState([]);
-  const [accounts, setAccounts] = useState([]);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [alertType, setAlertType] = useState("success");
+  const [loading, setLoading] = useState(false);
+  const [categoryOptions, setCategoryOptions] = useState([]);
 
   useEffect(() => {
     const fetchCategoriesData = async () => {
       try {
-        const categoriesData = await fetchCategories();
-        setCategories(categoriesData);
+        const categories = await fetchCategories();
+        setCategoryOptions(categories);
       } catch (error) {
-        console.error("Erro ao buscar categorias:", error);
+        console.error('Erro ao buscar categorias:', error);
+        // Trate o erro conforme necessário
       }
     };
 
@@ -52,156 +35,108 @@ const EntryForm = ({ entry }) => {
   }, []);
 
   useEffect(() => {
-    const fetchAccountsData = async () => {
-      try {
-        const accountsData = await fetchAccounts();
-        setAccounts(accountsData);
-      } catch (error) {
-        console.error("Erro ao buscar contas:", error);
+    const fetchEntryData = async () => {
+      if (entryId) {
+        try {
+          const entry = await fetchEntryById(entryId);
+          setFormData(entry); // Preenche o formulário com os dados da entrada encontrada
+        } catch (error) {
+          console.error('Erro ao buscar entrada:', error);
+          // Trate o erro conforme necessário
+        }
       }
     };
 
-    fetchAccountsData();
-  }, []);
+    fetchEntryData();
+  }, [entryId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    if (name === 'category') {
-      const selectedCategoryId = value; // Aqui pegamos o ID da categoria selecionada diretamente do evento
-      const selectedCategory = categories.find(category => category._id === selectedCategoryId);
-
-      if (selectedCategory) {
-        setFormData((prevData) => ({
-          ...prevData,
-          category: selectedCategory._id, // Atualizamos o ID da categoria selecionada
-          categoryDescription: selectedCategory.description,
-        }));
-      }
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
-
-  const handleSubmit = async (e) => {
+  const submitForm = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      const dataToSend = {
-        ...formData,
-        value: parseFloat(formData.value).toFixed(2),
-        category: formData.category, // Aqui estamos enviando o ID da categoria
-        due_date: formData.due_date,
-        payment_date: formData.payment_date,
-      };
-
-      if (entry) {
-        await updateEntry(`${entry._id}`, dataToSend);
-        router.push('/admin/dashboard');
-        setAlertMessage("Entrada atualizada com sucesso!");
+      if (entryId) {
+        await updateEntry(entryId, formData);
       } else {
-        await createEntry(dataToSend);
-        router.push('/admin/dashboard');
-        setAlertMessage("Entrada criada com sucesso!");
+        await createEntry(formData);
       }
-      setFormData(initialFormData); // Limpa o formulário após submissão
-      setAlertType("success");
+      await onSubmit(formData);
     } catch (error) {
-      console.error("Erro:", error);
-      setAlertType("error");
-      setAlertMessage("Erro ao enviar entrada. Por favor, tente novamente.");
+      console.error('Erro ao enviar formulário:', error);
+    } finally {
+      setLoading(false);
     }
-  };
-
-  const handleCancel = () => {
-    router.push('/admin/dashboard');
   };
 
   return (
-    <Box p={5} ml={5} mt={5} boxShadow="base" borderRadius="md" bg="white" width="80%">
-      <Box mb={4} display="flex" justifyContent="space-between" alignItems="center">
-        <Heading as="h2" size="lg">{entry ? "Editar Entrada" : "Criar Entrada"}</Heading>
-      </Box>
-
-      {alertMessage && (
-        <Alert status={alertType} mb={4} rounded="md">
-          <AlertIcon />
-          {alertMessage}
-        </Alert>
-      )}
-
-      <form onSubmit={handleSubmit}>
-        <FormControl id="type" mb={4}>
-          <FormLabel>Tipo</FormLabel>
+    <form onSubmit={submitForm}>
+      <Stack spacing={4}>
+        <FormControl>
+          <FormLabel htmlFor="type">Tipo</FormLabel>
           <Select
             name="type"
             value={formData.type}
             onChange={handleChange}
-            required
           >
-            <option value="">Selecione o tipo</option>
-            {categories.map((category) => (
-              <option key={category._id} value={category.type}>
-                {category.type}
-              </option>
-            ))}
+            <option value="Receita">Receita</option>
+            <option value="Despesa">Despesa</option>
           </Select>
         </FormControl>
 
-        <FormControl id="category" mb={4}>
-          <FormLabel>Categoria</FormLabel>
+        <FormControl>
+          <FormLabel htmlFor="categories">Categoria</FormLabel>
           <Select
-            name="category"
-            value={formData.category}
+            name="categories"
+            value={formData.categories}
             onChange={handleChange}
-            required
           >
-            <option value="">Selecione a Categoria</option>
-            {categories.map((category) => (
-              <option key={category._id} value={category._id}>
+            {categoryOptions.map((category) => (
+              <option key={category._id} value={category.description}>
                 {category.description}
               </option>
             ))}
           </Select>
         </FormControl>
 
-        <FormControl id="description" mb={4}>
-          <FormLabel>Descrição</FormLabel>
-          <Textarea
+        <FormControl>
+          <FormLabel htmlFor="description">Descrição</FormLabel>
+          <Input
             name="description"
             value={formData.description}
             onChange={handleChange}
-            required
           />
         </FormControl>
 
-        <FormControl id="value" mb={4}>
-          <FormLabel>Valor</FormLabel>
+        <FormControl>
+          <FormLabel htmlFor="value">Valor</FormLabel>
           <Input
-            type="text"
+            type="number"
+            step="0.01"
             name="value"
             value={formData.value}
             onChange={handleChange}
-            required
           />
         </FormControl>
 
-        <FormControl id="due_date" mb={4}>
-          <FormLabel>Data de Vencimento</FormLabel>
+        <FormControl>
+          <FormLabel htmlFor="due_date">Data de Vencimento</FormLabel>
           <Input
             type="date"
             name="due_date"
             value={formData.due_date}
             onChange={handleChange}
-            required
           />
         </FormControl>
 
-        <FormControl id="payment_date" mb={4}>
-          <FormLabel>Data de Pagamento</FormLabel>
+        <FormControl>
+          <FormLabel htmlFor="payment_date">Data de Pagamento</FormLabel>
           <Input
             type="date"
             name="payment_date"
@@ -210,56 +145,33 @@ const EntryForm = ({ entry }) => {
           />
         </FormControl>
 
-        <FormControl id="account" mb={4}>
-          <FormLabel>Conta</FormLabel>
-          <Select
+        <FormControl>
+          <FormLabel htmlFor="account">Conta</FormLabel>
+          <Input
             name="account"
             value={formData.account}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Selecione a Conta</option>
-            {accounts.map((account) => (
-              <option key={account._id} value={account.description}>
-                {account.description} ({account.comments})
-              </option>
-            ))}
-          </Select>
-        </FormControl>
-
-        <FormControl id="status" mb={4}>
-          <FormLabel>Status</FormLabel>
-          <Select
-            name="status"
-            value={formData.status}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Selecione o Status</option>
-            <option value="Lancada">Lançada</option>
-            <option value="Confirmada">Confirmada</option>
-            <option value="Paga">Paga</option>
-            <option value="Cancelada">Cancelada</option>
-          </Select>
-        </FormControl>
-
-        <FormControl id="comments" mb={4}>
-          <FormLabel>Comentários</FormLabel>
-          <Textarea
-            name="comments"
-            value={formData.comments}
             onChange={handleChange}
           />
         </FormControl>
 
-        <Button colorScheme="teal" type="submit">
-          {entry ? "Atualizar Entrada" : "Criar Entrada"}
+        <FormControl>
+          <FormLabel htmlFor="status">Status</FormLabel>
+          <Select
+            name="status"
+            value={formData.status}
+            onChange={handleChange}
+          >
+            <option value="Paga">Paga</option>
+            <option value="Pendente">Pendente</option>
+            {/* Adicione outras opções de status conforme necessário */}
+          </Select>
+        </FormControl>
+
+        <Button type="submit" isLoading={loading}>
+          {entryId ? 'Atualizar Entrada' : 'Criar Entrada'}
         </Button>
-        <Button colorScheme="gray" onClick={handleCancel} m={5}>
-          Cancelar
-        </Button>
-      </form>
-    </Box>
+      </Stack>
+    </form>
   );
 };
 
