@@ -36,7 +36,7 @@ router.get('/:id', async (req, res) => {
     if (!foundEntry) {
       return res.status(404).json({ message: 'Entrada não encontrada' });
     }
-
+    console.log('Entradas encontradas com sucesso!');
     res.status(200).json(foundEntry);
   } catch (err) {
     res.status(400).json({ message: err.message });

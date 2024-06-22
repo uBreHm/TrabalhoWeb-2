@@ -1,9 +1,10 @@
+// pages/entries/[id].js
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { Box, Heading, Text } from '@chakra-ui/react';
 import Navbar from '../../../components/navbar';
-import EntryForm from '../../../components/createEditEntry'; 
-import { fetchEntryById } from '../../api/entries';
+import EntryForm from '../../../components/entryForm'; 
+import { fetchEntryById } from '@/pages/api/entries';
 
 const PageEntry = () => {
   const router = useRouter();
@@ -12,14 +13,18 @@ const PageEntry = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() =>  {
+  useEffect(() => {
     const fetchEntry = async () => {
       if (id) {
         try {
           const data = await fetchEntryById(id);
-          setEntry(data);
+          if (data) {
+            setEntry(data);
+          } else {
+            setError('Nenhuma entrada encontrada com o ID especificado.');
+          }
         } catch (error) {
-          setError(error.message);
+          setError(`Erro ao buscar entrada: ${error.message}`);
         } finally {
           setLoading(false);
         }
@@ -53,7 +58,7 @@ const PageEntry = () => {
       <Box ml={220} p={5}>
         <Heading mb={5}>{entry ? 'Editar Entrada' : 'Criar Nova Entrada'}</Heading>
         {entry ? (
-          <EntryForm entry={entry} />
+          <EntryForm entryId={id} initialValues={entry} />
         ) : (
           <Text>Nenhuma entrada encontrada com o ID especificado.</Text>
         )}

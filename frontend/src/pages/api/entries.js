@@ -13,7 +13,7 @@ export async function fetchEntries() {
 
 export async function fetchEntryById(id) {
     try {
-      const response = await axios.get(`${BASE_URL}/entries/${id}`);
+      const response = await axios.get(`${BASE_URL}/entries/${id}`)
       return response.data;
     } catch (error) {
       throw new Error(`Erro ao buscar entrada por ID ${id}: ${error.message}`);
@@ -46,3 +46,6 @@ export async function deleteEntry(entryId) {
     throw new Error(`Erro ao deletar entrada: ${error.message}`);
   }
 }
+
+
+

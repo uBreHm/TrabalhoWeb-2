@@ -47,3 +47,15 @@ export async function deleteCategories(id) {
     throw new Error(`Erro ao deletar categoria: ${error.message}`);
   }
 }
+
+export async function fetchCategoriesByType(type) {
+  try {
+    const response = await axios.get(`${BASE_URL}/categories`);
+    const filteredCategories = response.data
+      .filter(category => category.type === type);
+    return filteredCategories;
+  } catch (error) {
+    throw new Error(`Erro ao buscar categorias por tipo ${type}: ${error.message}`);
+  }
+}
+

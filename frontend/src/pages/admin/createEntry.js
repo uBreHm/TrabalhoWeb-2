@@ -1,6 +1,6 @@
 // pages/admin/createEntry.js
 import React from "react";
-import EntryForm from "@/components/createEditEntry";
+import EntryForm from "@/components/entryForm";
 import Navbar from "@/components/navbar";
 import { authMiddleware } from "@/middleware/auth";
 

@@ -7,7 +7,7 @@ import { checkAdmin } from '../api/hello';
 import styles from '../../styles/dashboard.module.css';
 import Nav from '@/components/navbar'; 
 import TableEntries from '@/components/entryTable';
-import EntryForm from '@/components/createEditEntry'; // Importe o componente de formulário de entrada
+import EntryForm from '@/components/entryForm'; // Importe o componente de formulário de entrada
 
 export default function AdminDashboard() {
   const router = useRouter();
