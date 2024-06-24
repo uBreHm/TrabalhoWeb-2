@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { login, checkAdmin } from '../pages/api/hello';
-import { Box, Button, FormControl, FormLabel, Input, Stack } from '@chakra-ui/react';
+import { Box, Button, FormControl, FormLabel, Input, Stack, Alert, AlertIcon, AlertTitle, AlertDescription, CloseButton } from '@chakra-ui/react';
 import Cookies from 'js-cookie';
 
 const Login = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({ user: '', pwd: '' });
-  const [message, setMessage] = useState({ type: '', text: '' });
+  const [message, setMessage] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -85,6 +85,14 @@ const Login = () => {
             </Button>
           </Stack>
         </form>
+        {message && (
+          <Alert status={message.type} mt={4}>
+            <AlertIcon />
+            <AlertTitle mr={2}>{message.type === 'error' ? 'Erro' : 'Sucesso'}</AlertTitle>
+            <AlertDescription>{message.text}</AlertDescription>
+            <CloseButton position="absolute" right="8px" top="8px" onClick={() => setMessage(null)} />
+          </Alert>
+        )}
       </Box>
     </Box>
   );

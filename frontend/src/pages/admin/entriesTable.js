@@ -16,10 +16,10 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { fetchEntries, deleteEntry } from "../api/entries";
-import { EditIcon, DeleteIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
+import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import styles from "../../styles/tableEntries.module.css";
 import { useRouter } from "next/router";
-import { authMiddleware } from "@/middleware/auth";
+import Navbar from "@/components/navbar";
 
 const TableEntries = () => {
   const router = useRouter();
@@ -28,6 +28,7 @@ const TableEntries = () => {
   const [error, setError] = useState(null);
   const [filterMonth, setFilterMonth] = useState("");
 
+  // Fetch entries data when the component mounts
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -42,6 +43,7 @@ const TableEntries = () => {
     fetchData();
   }, []);
 
+  // Handle delete entry
   const handleDelete = async (id) => {
     try {
       await deleteEntry(id);
@@ -53,30 +55,22 @@ const TableEntries = () => {
     }
   };
 
+  // Handle edit entry
   const handleEdit = (id) => {
     router.push(`/admin/formEntry/${id}`);
   };
 
+  // Handle create entry
   const handleCreate = () => {
     router.push(`/admin/createEntry`);
   };
 
-  const handleConfirm = (id) => {
-    // Lógica para confirmar o lançamento
-  };
-
-  const handlePay = (id) => {
-    // Lógica para realizar o pagamento
-  };
-
-  const handleCancel = (id) => {
-    // Lógica para cancelar o lançamento
-  };
-
+  // Handle filter by month
   const handleFilterChange = (event) => {
     setFilterMonth(event.target.value);
   };
 
+  // Filter entries based on selected month
   const filteredEntries = filterMonth
     ? entries.filter(
         (entry) =>
@@ -84,6 +78,7 @@ const TableEntries = () => {
       )
     : entries;
 
+  // Show loading spinner
   if (loading) {
     return (
       <Center h="100vh">
@@ -92,6 +87,7 @@ const TableEntries = () => {
     );
   }
 
+  // Show error message
   if (error) {
     return (
       <Center h="100vh">
@@ -100,9 +96,11 @@ const TableEntries = () => {
     );
   }
 
+  // Render entries table
   return (
-    <Box p={5} boxShadow="base" borderRadius="md" bg="white">
-      <Box mb={4}>
+    <Box display="flex">
+      <Navbar />
+      <Box p={5} boxShadow="base" borderRadius="md" bg="white" flex="1" ml="220px">
         <Heading as="h2" size="lg" mb={4}>
           Lançamentos
         </Heading>

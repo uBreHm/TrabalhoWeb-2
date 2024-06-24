@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Box, Button, FormControl, FormLabel, Input, useToast, Card, CardHeader, CardBody } from '@chakra-ui/react';
+import { Box, Button, FormControl, FormLabel, Input, Select, useToast } from '@chakra-ui/react';
 import { createAccounts, updateAccounts, fetchAccountsById } from '../pages/api/accounts';
 
 const AccountForm = ({ accountId }) => {
@@ -69,17 +69,20 @@ const AccountForm = ({ accountId }) => {
     };
 
     return (
-        <Card boxShadow="base" borderRadius="md" p={4}>
-            <CardHeader>Formulário de Conta</CardHeader>
-            <CardBody>
+        <Box boxShadow="base" width="500px" borderRadius="md" p={4}>
+            <Box as="h2" size="lg" mb={4} fontWeight="bold">Formulário de Conta</Box>
+            <Box>
                 <form onSubmit={handleSubmit}>
                     <FormControl id="description" isRequired>
-                        <FormLabel>Descrição</FormLabel>
-                        <Input
-                            type="text"
+                        <FormLabel>Tipo de Conta</FormLabel>
+                        <Select
+                            placeholder="Selecione o tipo de conta"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
-                        />
+                        >
+                            <option value="Conta Corrente">Conta Corrente</option>
+                            <option value="Poupança">Poupança</option>
+                        </Select>
                     </FormControl>
                     <FormControl id="comments" mt={4}>
                         <FormLabel>Comentários</FormLabel>
@@ -93,8 +96,8 @@ const AccountForm = ({ accountId }) => {
                         {accountId ? 'Atualizar Conta' : 'Criar Conta'}
                     </Button>
                 </form>
-            </CardBody>
-        </Card>
+            </Box>
+        </Box>
     );
 };
 

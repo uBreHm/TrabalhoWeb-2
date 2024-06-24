@@ -4,6 +4,7 @@ import Navbar from '../../components/navbar';
 import FormUser from '../../components/tableUsers';
 import { Box } from '@chakra-ui/react';
 
+
 const CreateUser = () => {
   return (
     <Box display="flex">

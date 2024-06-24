@@ -22,7 +22,7 @@ const Navbar = () => {
             Dashboard
           </Button>
         </NextLink>
-        <NextLink href="/admin/createEntry" passHref>
+        <NextLink href="/admin/entriesTable" passHref>
           <Button colorScheme="teal" variant="ghost" width="100%" textAlign="left">
             Lançamentos
           </Button>

@@ -12,25 +12,29 @@ import {
   Text,
   IconButton,
   Heading,
-  Button, // Importe o componente Button do Chakra UI
+  Button,
+  Select,
 } from "@chakra-ui/react";
 import { fetchEntries, deleteEntry } from "../pages/api/entries";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import styles from "../styles/tableEntries.module.css";
 import { useRouter } from "next/router";
-import { authMiddleware } from "@/middleware/auth";
 
 const TableEntries = () => {
   const router = useRouter();
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filterMonth, setFilterMonth] = useState("");
 
+  // Fetch entries data when the component mounts
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await fetchEntries();
-        setEntries(data);
+        // Ordena as entradas pela data de vencimento em ordem decrescente
+        const sortedData = data.sort((a, b) => new Date(b.due_date) - new Date(a.due_date));
+        setEntries(sortedData);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -38,8 +42,9 @@ const TableEntries = () => {
       }
     };
     fetchData();
-  }, []); // Apenas executa uma vez no início
+  }, []);
 
+  // Handle delete entry
   const handleDelete = async (id) => {
     try {
       await deleteEntry(id);
@@ -51,14 +56,30 @@ const TableEntries = () => {
     }
   };
 
+  // Handle edit entry
   const handleEdit = (id) => {
     router.push(`/admin/formEntry/${id}`);
   };
 
+  // Handle create entry
   const handleCreate = () => {
-    router.push(`/admin/createEntry`); // Redireciona para a página de criação de usuário
+    router.push(`/admin/createEntry`);
   };
 
+  // Handle filter by month
+  const handleFilterChange = (event) => {
+    setFilterMonth(event.target.value);
+  };
+
+  // Filter entries based on selected month
+  const filteredEntries = filterMonth
+    ? entries.filter(
+        (entry) =>
+          new Date(entry.due_date).getMonth() === parseInt(filterMonth, 10) - 1
+      )
+    : entries;
+
+  // Show loading spinner
   if (loading) {
     return (
       <Center h="100vh">
@@ -67,6 +88,7 @@ const TableEntries = () => {
     );
   }
 
+  // Show error message
   if (error) {
     return (
       <Center h="100vh">
@@ -76,11 +98,30 @@ const TableEntries = () => {
   }
 
   return (
-    <Box p={5} boxShadow="base" borderRadius="md" bg="white">
-      <Box mb={4}>
+    <Box display="flex">
+      <Box p={5} boxShadow="base" borderRadius="md" bg="white" flex="1">
         <Heading as="h2" size="lg" mb={4}>
           Lançamentos
         </Heading>
+        <Box mb={4} display="flex" justifyContent="space-between">
+          <Select placeholder="Filtrar por mês" onChange={handleFilterChange}>
+            <option value="1">Janeiro</option>
+            <option value="2">Fevereiro</option>
+            <option value="3">Março</option>
+            <option value="4">Abril</option>
+            <option value="5">Maio</option>
+            <option value="6">Junho</option>
+            <option value="7">Julho</option>
+            <option value="8">Agosto</option>
+            <option value="9">Setembro</option>
+            <option value="10">Outubro</option>
+            <option value="11">Novembro</option>
+            <option value="12">Dezembro</option>
+          </Select>
+          <Button colorScheme="teal" onClick={handleCreate}>
+            Criar Lançamento
+          </Button>
+        </Box>
         <Box className={styles["table-wrapper"]}>
           <Table
             className={styles["custom-table"]}
@@ -103,7 +144,7 @@ const TableEntries = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {entries.map((entry) => (
+              {filteredEntries.map((entry) => (
                 <Tr key={entry._id}>
                   <Td>{entry.type}</Td>
                   <Td>{entry.categories}</Td>
@@ -143,11 +184,6 @@ const TableEntries = () => {
             </Tbody>
           </Table>
         </Box>
-      </Box>
-      <Box mt={4} display="flex" justifyContent="flex-end">
-        <Button colorScheme="teal" onClick={handleCreate}>
-          Criar Lançamento
-        </Button>
       </Box>
     </Box>
   );
