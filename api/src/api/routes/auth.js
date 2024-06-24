@@ -1,4 +1,4 @@
-// routes/auth.js
+
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
@@ -7,13 +7,10 @@ const mongoose = require('mongoose');
 const authMiddleware = require('../middleware/middleware');
 
 
-// Definir o segredo JWT
 const secret = "b88a58a7effe40649cbcd84e5533bb15";
 
-// Importar o modelo de usuário
 const User = mongoose.model('User');
 
-// Login route
 router.post('/login', async (req, res) => {
   const { user, pwd } = req.body;
 
@@ -28,7 +25,7 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Credenciais inválidas!' });
     }
 
-    if(foundUser.status === 'off'){
+    if (foundUser.status === 'Off') {
       return res.status(403).json({ message: 'Usuário desativado!' });
     }
     
@@ -40,8 +37,9 @@ router.post('/login', async (req, res) => {
   }
 });
 
+
 router.get('/admin', authMiddleware, (req, res) => {
-  res.json({ isAdmin: true });
+  res.json({ isAdmin: true, status: true });
 });
 
 module.exports = router;

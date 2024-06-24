@@ -18,13 +18,10 @@ module.exports = (req, res, next) => {
     const decoded = jwt.verify(token, secret);
     req.user = decoded;
 
-    if (req.user.level !== 'admin') {
+    if (req.user.level !== 'Admin') {
       return res.status(403).json({ message: 'Acesso negado. Você não tem permissão de administrador.' });
     }
 
-    if(req.user.status === 'off'){
-      return res.status(403).json({ message: 'Usuário desativado!' });
-    }
 
     console.log('Token verificado com sucesso', decoded);
     next();

@@ -1,5 +1,4 @@
 
-// routes/categories.js
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
@@ -12,8 +11,7 @@ const categoriesSchema = new mongoose.Schema({
 
 const Category = mongoose.model('Category', categoriesSchema);
 
-// Retornar todas as categorias
-// GET "/categories"
+
 router.get('/', async (req, res) => {
   try {
     const categories = await Category.find();
@@ -40,8 +38,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Inserir uma nova categoria
-// POST "/categories" BODY { ... }
+
 router.post('/', async (req, res) => {
   const category = req.body;
   try {
@@ -53,8 +50,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Alterar uma categoria
-// PUT "/categories/:id" BODY { ... }
 router.put('/:id', async (req, res) => {
   const id = req.params.id;
   const updatedCategory = req.body;
@@ -67,8 +62,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// Deletar uma categoria
-// DELETE "/categories/:id"
+
 router.delete('/:id', async (req, res) => {
   const id = req.params.id;
   try {

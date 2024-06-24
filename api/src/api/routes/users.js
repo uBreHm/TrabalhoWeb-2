@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs'); // Use bcryptjs
+const bcrypt = require('bcryptjs'); 
 
 const usersSchema = new mongoose.Schema({
   name: String, 
@@ -13,7 +13,6 @@ const usersSchema = new mongoose.Schema({
   create_date: { type: Date, default: Date.now }
 });
 
-// Hash password before saving
 usersSchema.pre('save', async function(next) {
   if (this.isModified('pwd') || this.isNew) {
     this.pwd = await bcrypt.hash(this.pwd, 10);
@@ -23,8 +22,6 @@ usersSchema.pre('save', async function(next) {
 
 const User = mongoose.model('User', usersSchema);
 
-// Retornar todos os usuários
-// GET "/users"
 router.get('/', async (req, res) => {
   try {
     const foundedUser = await User.find();
@@ -35,8 +32,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Retornar um usuário específico
-// GET /users/:id
+
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   try {

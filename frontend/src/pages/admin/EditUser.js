@@ -40,9 +40,9 @@ const EditUser = () => {
 };
 
 export const getServerSideProps = async (ctx) => {
-  debugger
   const authResult = await authMiddleware(ctx);
-  if (!authResult.isAuthenticated) {
+
+  if (!authResult.props.isAdmin) {
     return {
       redirect: {
         destination: '/login',
@@ -52,8 +52,10 @@ export const getServerSideProps = async (ctx) => {
   }
 
   return {
-    props: { isAdmin: authResult.isAdmin },
+    props: { isAdmin: authResult.props.isAdmin },
   };
 };
+
+
 
 export default EditUser;

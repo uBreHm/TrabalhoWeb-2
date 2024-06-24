@@ -192,20 +192,21 @@ const TableEntries = () => {
 };
 
 export const getServerSideProps = async (ctx) => {
-    debugger
-    const authResult = await authMiddleware(ctx);
-    if (!authResult.isAuthenticated) {
-      return {
-        redirect: {
-          destination: '/login',
-          permanent: false,
-        },
-      };
-    }
-  
+  const authResult = await authMiddleware(ctx);
+
+  if (!authResult.props.isAdmin) {
     return {
-      props: { isAdmin: authResult.isAdmin },
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
     };
+  }
+
+  return {
+    props: { isAdmin: authResult.props.isAdmin },
   };
+};
+
 
 export default TableEntries;

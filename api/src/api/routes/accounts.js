@@ -1,4 +1,4 @@
-// routes/accounts.js
+
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
@@ -11,8 +11,7 @@ const accountsSchema = new mongoose.Schema({
 
 const Account = mongoose.model('Account', accountsSchema);
 
-// Retornar todas as contas
-// GET "/accounts"
+
 router.get('/', async (req, res) => {
   try {
     const accounts = await Account.find();
@@ -37,8 +36,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Inserir uma nova conta
-// POST "/accounts" BODY { ... }
+
 router.post('/', async (req, res) => {
   const account = req.body;
   try {
@@ -50,8 +48,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Alterar uma conta
-// PUT "/accounts/:id" BODY { ... }
+
 router.put('/:id', async (req, res) => {
   const id = req.params.id;
   const updatedAccount = req.body;
@@ -64,8 +61,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// Deletar uma conta
-// DELETE "/accounts/:id"
+
 router.delete('/:id', async (req, res) => {
   const id = req.params.id;
   try {

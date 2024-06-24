@@ -3,7 +3,6 @@ const app = express();
 const db = require('./db');
 const routes = require('./api/routes');
 const authMiddleware = require('./api/middleware/middleware');
-const admin = require('./api/routes/admin');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -22,7 +21,7 @@ db.once('open', () => {
 });
 
 app.use('/api', routes);
-app.use('/auth', require('./api/routes/auth')); // Certifique-se de que está usando a rota correta
+app.use('/auth', require('./api/routes/auth'));
 
 app.use('/users', authMiddleware, require('./api/routes/users'));
 app.use('/accounts', authMiddleware, require('./api/routes/accounts'));

@@ -1,3 +1,5 @@
+// pages/createUser.js
+
 import Navbar from '../../components/navbar';
 import FormUser from '../../components/tableUsers';
 import { Box } from '@chakra-ui/react';
@@ -15,9 +17,9 @@ const CreateUser = ({ isAdmin }) => {
 };
 
 export const getServerSideProps = async (ctx) => {
-  debugger
   const authResult = await authMiddleware(ctx);
-  if (!authResult.isAuthenticated) {
+
+  if (!authResult.props.isAdmin) {
     return {
       redirect: {
         destination: '/login',
@@ -27,7 +29,7 @@ export const getServerSideProps = async (ctx) => {
   }
 
   return {
-    props: { isAdmin: authResult.isAdmin },
+    props: { isAdmin: authResult.props.isAdmin },
   };
 };
 
