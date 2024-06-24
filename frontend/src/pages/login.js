@@ -26,11 +26,10 @@ const Login = () => {
             setMessage({ type: 'success', text: 'Login efetuado com sucesso' });
             router.push('/admin/dashboard');
           } else {
-            setMessage({ type: 'error', text: 'Usuário não é administrador' });
-            router.push('/');
+            setMessage({ type: 'error', text: 'Usuário desativado!' });
           }
         } catch (error) {
-          setMessage({ type: 'error', text: 'Usuário desativado!' });
+          setMessage({ type: 'error', text: 'Usuário não é administrador' });
         }
       } else {
         setMessage({ type: 'error', text: 'Credenciais inválidas' });
