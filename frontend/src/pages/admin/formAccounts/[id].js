@@ -14,8 +14,6 @@ const AccountPage = ({ accountId }) => {
   );
 };
 
-export default AccountPage;
-
 export const getServerSideProps = async (ctx) => {
   debugger
   const authResult = await authMiddleware(ctx);
@@ -32,3 +30,6 @@ export const getServerSideProps = async (ctx) => {
     props: { isAdmin: authResult.isAdmin },
   };
 };
+
+export default AccountPage;
+

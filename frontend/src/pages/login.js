@@ -30,7 +30,7 @@ const Login = () => {
             router.push('/');
           }
         } catch (error) {
-          setMessage({ type: 'error', text: 'Erro ao verificar acesso de administrador' });
+          setMessage({ type: 'error', text: 'Usuário desativado!' });
         }
       } else {
         setMessage({ type: 'error', text: 'Credenciais inválidas' });
@@ -87,7 +87,6 @@ const Login = () => {
         </form>
         {message && (
           <Alert status={message.type} mt={4}>
-            <AlertIcon />
             <AlertTitle mr={2}>{message.type === 'error' ? 'Erro' : 'Sucesso'}</AlertTitle>
             <AlertDescription>{message.text}</AlertDescription>
             <CloseButton position="absolute" right="8px" top="8px" onClick={() => setMessage(null)} />

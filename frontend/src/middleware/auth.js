@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
 import { checkAdmin } from '@/pages/api/hello';
+import { fetchUsersById } from '@/pages/api/user';
 
-const secret = process.env.JWT_SECRET || 'b88a58a7effe40649cbcd84e5533bb15'; // Use a variável de ambiente ou um valor padrão
+const secret = 'b88a58a7effe40649cbcd84e5533bb15'; 
 
 export async function authMiddleware(ctx) {
   const { req } = ctx;
@@ -23,6 +24,8 @@ export async function authMiddleware(ctx) {
     if (isAdminResponse.isAdmin) {
       return { isAuthenticated: true, isAdmin: true };
     }
+
+    
 
     return { isAuthenticated: true, isAdmin: false };
   } catch (error) {

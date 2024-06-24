@@ -125,17 +125,17 @@ export const getServerSideProps = async (ctx) => {
     debugger
     const authResult = await authMiddleware(ctx);
     if (!authResult.isAuthenticated) {
-      return {
-        redirect: {
-          destination: '/login',
-          permanent: false,
-        },
-      };
+        return {
+            redirect: {
+                destination: '/login',
+                permanent: false,
+            },
+        };
     }
-  
+
     return {
-      props: { isAdmin: authResult.isAdmin },
+        props: { isAdmin: authResult.isAdmin },
     };
-  };
+};
 
 export default TableAccounts;

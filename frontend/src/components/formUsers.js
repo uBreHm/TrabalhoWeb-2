@@ -103,8 +103,8 @@ const FormUser = () => {
           <FormLabel>Status</FormLabel>
           <Select name="status" value={formData.status} onChange={handleChange}>
             <option value="">Selecione</option>
-            <option value="Ativo">Ativo</option>
-            <option value="inacDesativadotive">Desativado</option>
+            <option value="On">On</option>
+            <option value="Off">Off</option>
           </Select>
         </FormControl>
         <Button type="submit" colorScheme="teal" mt={4}>

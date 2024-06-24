@@ -21,6 +21,10 @@ export async function login(user, pwd) {
     if (!response.ok) {
       throw new Error('Erro ao fazer login');
     }
+    if(response.status === 'Off')
+      {
+        throw new Error('Usuário desativado!');
+      }
     return response.json();
   } catch (error) {
     throw new Error(`Erro ao fazer login: ${error.message}`);
