@@ -1,11 +1,9 @@
-// pages/admin/EditUser.js
 
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import FormUser from '../../components/formUsers';
 import Navbar from '../../components/navbar';
 import { Box } from '@chakra-ui/react';
-import { fetchUser } from '../api/user';
 import { authMiddleware } from '@/middleware/auth';
 
 const EditUser = () => {

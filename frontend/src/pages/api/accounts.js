@@ -1,8 +1,7 @@
-// pages/api/accounts.js
+
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8080/api'; // URL base da sua API Node.js
-
+const BASE_URL = 'http://localhost:8080/api';
 export async function fetchAccounts() {
   try {
     const response = await axios.get(`${BASE_URL}/accounts`);

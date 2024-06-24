@@ -1,8 +1,8 @@
-// middleware/auth.js
+
 import jwt from 'jsonwebtoken';
 import { checkAdmin } from '@/pages/api/hello';
 
-const secret = 'b88a58a7effe40649cbcd84e5533bb15'; // Defina seu segredo aqui ou use variáveis de ambiente
+const secret = 'b88a58a7effe40649cbcd84e5533bb15';
 
 export async function authMiddleware(ctx) {
   const { req, res } = ctx;

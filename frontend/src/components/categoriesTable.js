@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
-import { fetchCategories, deleteCategories } from "../pages/api/categories"; // Importe a função fetchCategories e deleteCategory da API de categorias
+import { fetchCategories, deleteCategories } from "../pages/api/categories"; 
 import { authMiddleware } from "@/middleware/auth";
 
 const CategoriesTable = () => {

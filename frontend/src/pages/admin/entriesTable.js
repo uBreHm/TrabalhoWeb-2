@@ -29,7 +29,6 @@ const TableEntries = () => {
   const [error, setError] = useState(null);
   const [filterMonth, setFilterMonth] = useState("");
 
-  // Fetch entries data when the component mounts
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -44,7 +43,7 @@ const TableEntries = () => {
     fetchData();
   }, []);
 
-  // Handle delete entry
+
   const handleDelete = async (id) => {
     try {
       await deleteEntry(id);
@@ -56,22 +55,20 @@ const TableEntries = () => {
     }
   };
 
-  // Handle edit entry
   const handleEdit = (id) => {
     router.push(`/admin/formEntry/${id}`);
   };
 
-  // Handle create entry
+
   const handleCreate = () => {
     router.push(`/admin/createEntry`);
   };
 
-  // Handle filter by month
+
   const handleFilterChange = (event) => {
     setFilterMonth(event.target.value);
   };
 
-  // Filter entries based on selected month
   const filteredEntries = filterMonth
     ? entries.filter(
         (entry) =>
@@ -79,7 +76,6 @@ const TableEntries = () => {
       )
     : entries;
 
-  // Show loading spinner
   if (loading) {
     return (
       <Center h="100vh">
@@ -88,7 +84,6 @@ const TableEntries = () => {
     );
   }
 
-  // Show error message
   if (error) {
     return (
       <Center h="100vh">

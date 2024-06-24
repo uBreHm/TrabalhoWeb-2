@@ -1,8 +1,7 @@
-// pages/api/user.js
+
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8080/api'; // URL base da sua API Node.js
-
+const BASE_URL = 'http://localhost:8080/api'; 
 export async function fetchCategories() {
   try {
     const response = await axios.get(`${BASE_URL}/categories`);

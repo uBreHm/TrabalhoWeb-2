@@ -1,4 +1,4 @@
-// pages/createEditUsers.js
+
 import Navbar from '../../components/navbar';
 import FormUser from '../../components/formUsers';
 import { Box } from '@chakra-ui/react';

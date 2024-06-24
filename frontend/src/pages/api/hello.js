@@ -1,5 +1,5 @@
-// pages/api/hello.js
-const BASE_URL = 'http://localhost:8080/api'; // URL base da sua API Node.js
+
+const BASE_URL = 'http://localhost:8080/api';
 
 export async function fetchFromApi(endpoint, options = {}) {
   const response = await fetch(`${BASE_URL}${endpoint}`, options);

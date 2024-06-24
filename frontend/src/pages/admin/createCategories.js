@@ -1,4 +1,4 @@
-// pages/admin/createEntry.js
+
 import React from "react";
 import CategoryForm from "@/components/categoryForm";
 import Navbar from "@/components/navbar";

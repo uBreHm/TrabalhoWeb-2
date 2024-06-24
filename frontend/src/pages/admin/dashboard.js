@@ -1,4 +1,3 @@
-// pages/admin/dashboard.js
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
@@ -7,14 +6,13 @@ import { checkAdmin } from '../api/hello';
 import styles from '../../styles/dashboard.module.css';
 import Nav from '@/components/navbar'; 
 import TableEntries from '@/components/entryTable';
-import EntryForm from '@/components/entryForm'; // Importe o componente de formulário de entrada
+import EntryForm from '@/components/entryForm';
 
 export default function AdminDashboard() {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [editingEntry, setEditingEntry] = useState(null); // Estado para controlar se está editando uma entrada
-
+  const [editingEntry, setEditingEntry] = useState(null); 
   useEffect(() => {
     const token = Cookies.get('token');
     if (!token) {
@@ -40,11 +38,11 @@ export default function AdminDashboard() {
   }, [router]);
 
   const handleEditEntry = (id) => {
-    setEditingEntry(id); // Define o ID da entrada que está sendo editada
+    setEditingEntry(id); 
   };
 
   const handleBackToTable = () => {
-    setEditingEntry(null); // Limpa o estado de edição para exibir a tabela novamente
+    setEditingEntry(null); 
   };
 
   if (loading) {

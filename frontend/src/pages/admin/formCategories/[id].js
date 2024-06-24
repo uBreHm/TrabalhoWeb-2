@@ -1,4 +1,4 @@
-// pages/categories/[id].js
+
 import { useRouter } from 'next/router';
 import CategoryForm from '@/components/categoryForm';
 import Navbar from '@/components/navbar';

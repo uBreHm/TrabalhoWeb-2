@@ -1,4 +1,4 @@
-// pages/createUser.js
+
 
 import Navbar from '../../components/navbar';
 import FormUser from '../../components/tableUsers';
