@@ -17,6 +17,7 @@ import {
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 import { fetchCategories, deleteCategories } from "../pages/api/categories"; // Importe a função fetchCategories e deleteCategory da API de categorias
+import { authMiddleware } from "@/middleware/auth";
 
 const CategoriesTable = () => {
   const router = useRouter();
@@ -118,6 +119,23 @@ const CategoriesTable = () => {
       </Box>
     </Box>
   );
+};
+
+export const getServerSideProps = async (ctx) => {
+  debugger
+  const authResult = await authMiddleware(ctx);
+  if (!authResult.isAuthenticated) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { isAdmin: authResult.isAdmin },
+  };
 };
 
 export default CategoriesTable;

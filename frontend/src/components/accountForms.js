@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Box, Button, FormControl, FormLabel, Input, Select, useToast } from '@chakra-ui/react';
 import { createAccounts, updateAccounts, fetchAccountsById } from '../pages/api/accounts';
+import { authMiddleware } from '@/middleware/auth';
+
 
 const AccountForm = ({ accountId }) => {
     const [description, setDescription] = useState('');
@@ -100,5 +102,22 @@ const AccountForm = ({ accountId }) => {
         </Box>
     );
 };
+
+export const getServerSideProps = async (ctx) => {
+    debugger
+    const authResult = await authMiddleware(ctx);
+    if (!authResult.isAuthenticated) {
+      return {
+        redirect: {
+          destination: '/login',
+          permanent: false,
+        },
+      };
+    }
+  
+    return {
+      props: { isAdmin: authResult.isAdmin },
+    };
+  };
 
 export default AccountForm;

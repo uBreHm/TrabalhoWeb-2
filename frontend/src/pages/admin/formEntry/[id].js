@@ -5,6 +5,7 @@ import { Box, Heading, Text } from '@chakra-ui/react';
 import Navbar from '../../../components/navbar';
 import EntryForm from '../../../components/entryForm'; 
 import { fetchEntryById } from '@/pages/api/entries';
+import { authMiddleware } from '@/middleware/auth';
 
 const PageEntry = () => {
   const router = useRouter();
@@ -65,6 +66,23 @@ const PageEntry = () => {
       </Box>
     </Box>
   );
+};
+
+export const getServerSideProps = async (ctx) => {
+  debugger
+  const authResult = await authMiddleware(ctx);
+  if (!authResult.isAuthenticated) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { isAdmin: authResult.isAdmin },
+  };
 };
 
 export default PageEntry;

@@ -1,6 +1,7 @@
 import { Flex } from '@chakra-ui/react';
 import Navbar from '@/components/navbar';
 import AccountForm from '@/components/accountForms';
+import { authMiddleware } from '@/middleware/auth';
 
 const AccountPage = ({ accountId }) => {
   return (
@@ -15,10 +16,19 @@ const AccountPage = ({ accountId }) => {
 
 export default AccountPage;
 
-export async function getServerSideProps({ params }) {
+export const getServerSideProps = async (ctx) => {
+  debugger
+  const authResult = await authMiddleware(ctx);
+  if (!authResult.isAuthenticated) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
   return {
-    props: {
-      accountId: params.id || null,
-    },
+    props: { isAdmin: authResult.isAdmin },
   };
-}
+};

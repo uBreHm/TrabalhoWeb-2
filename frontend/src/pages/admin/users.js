@@ -1,11 +1,9 @@
-// pages/admin/userForm.js
-import { authMiddleware } from '@/middleware/auth';
 import Navbar from '../../components/navbar';
 import FormUser from '../../components/tableUsers';
 import { Box } from '@chakra-ui/react';
+import { authMiddleware } from '@/middleware/auth';
 
-
-const CreateUser = () => {
+const CreateUser = ({ isAdmin }) => {
   return (
     <Box display="flex">
       <Navbar />
@@ -17,8 +15,20 @@ const CreateUser = () => {
 };
 
 export const getServerSideProps = async (ctx) => {
-  const { props } = await authMiddleware(ctx);
-  return { props };
+  debugger
+  const authResult = await authMiddleware(ctx);
+  if (!authResult.isAuthenticated) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { isAdmin: authResult.isAdmin },
+  };
 };
 
 export default CreateUser;

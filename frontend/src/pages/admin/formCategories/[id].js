@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import CategoryForm from '@/components/categoryForm';
 import Navbar from '@/components/navbar';
 import { Box } from '@chakra-ui/react';
+import { authMiddleware } from '@/middleware/auth';
 
 const EditCategory = () => {
   const router = useRouter();
@@ -16,6 +17,23 @@ const EditCategory = () => {
       </Box>
     </Box>
   );
+};
+
+export const getServerSideProps = async (ctx) => {
+  debugger
+  const authResult = await authMiddleware(ctx);
+  if (!authResult.isAuthenticated) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { isAdmin: authResult.isAdmin },
+  };
 };
 
 export default EditCategory;

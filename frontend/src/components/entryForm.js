@@ -14,6 +14,7 @@ import {
 import { fetchEntryById, createEntry, updateEntry } from '@/pages/api/entries';
 import { fetchCategories } from '@/pages/api/categories';
 import { fetchAccounts } from '@/pages/api/accounts';
+import { authMiddlewares } from '@/middleware/auth';
 
 const EntryForm = ({ entryId }) => {
   const [formData, setFormData] = useState({
@@ -262,6 +263,24 @@ const EntryForm = ({ entryId }) => {
       </form>
     </Box>
   );
+};
+
+
+export const getServerSideProps = async (ctx) => {
+  debugger
+  const authResult = await authMiddleware(ctx);
+  if (!authResult.isAuthenticated) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { isAdmin: authResult.isAdmin },
+  };
 };
 
 export default EntryForm;

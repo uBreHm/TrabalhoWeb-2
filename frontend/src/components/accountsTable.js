@@ -17,6 +17,7 @@ import {
 import { fetchAccounts, deleteAccounts } from "../pages/api/accounts";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
+import { authMiddleware } from "@/middleware/auth";
 
 const TableAccounts = () => {
     const router = useRouter();
@@ -119,5 +120,22 @@ const TableAccounts = () => {
         </Box>
     );
 };
+
+export const getServerSideProps = async (ctx) => {
+    debugger
+    const authResult = await authMiddleware(ctx);
+    if (!authResult.isAuthenticated) {
+      return {
+        redirect: {
+          destination: '/login',
+          permanent: false,
+        },
+      };
+    }
+  
+    return {
+      props: { isAdmin: authResult.isAdmin },
+    };
+  };
 
 export default TableAccounts;

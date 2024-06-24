@@ -16,8 +16,20 @@ const CreateUser = () => {
 };
 
 export const getServerSideProps = async (ctx) => {
-  const { props } = await authMiddleware(ctx);
-  return { props };
+  debugger
+  const authResult = await authMiddleware(ctx);
+  if (!authResult.isAuthenticated) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { isAdmin: authResult.isAdmin },
+  };
 };
 
 export default CreateUser;

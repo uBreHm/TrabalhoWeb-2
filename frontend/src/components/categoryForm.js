@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Box, Button, FormControl, FormLabel, Input, Select, useToast } from '@chakra-ui/react';
 import { createCategories, updateCategories, fetchCategoriesById } from '@/pages/api/categories';
+import { authMiddleware } from '@/middleware/auth';
 
 const CategoryForm = ({ categoryId }) => {
   const [description, setDescription] = useState('');
@@ -96,6 +97,23 @@ const CategoryForm = ({ categoryId }) => {
       </form>
     </Box>
   );
+};
+
+export const getServerSideProps = async (ctx) => {
+  debugger
+  const authResult = await authMiddleware(ctx);
+  if (!authResult.isAuthenticated) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { isAdmin: authResult.isAdmin },
+  };
 };
 
 export default CategoryForm;

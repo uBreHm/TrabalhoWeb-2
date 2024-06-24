@@ -6,6 +6,7 @@ import { Box } from "@chakra-ui/react";
 import FormUser from "@/components/formUsers";
 import Navbar from "@/components/navbar";
 import { fetchUsersById } from "../../api/user";
+import { authMiddleware } from "@/middleware/auth";
 
 const UserPage = () => {
   const router = useRouter();
@@ -41,6 +42,23 @@ const UserPage = () => {
       </Box>
     </Box>
   );
+};
+
+export const getServerSideProps = async (ctx) => {
+  debugger
+  const authResult = await authMiddleware(ctx);
+  if (!authResult.isAuthenticated) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { isAdmin: authResult.isAdmin },
+  };
 };
 
 export default UserPage;

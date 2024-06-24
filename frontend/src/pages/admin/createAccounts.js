@@ -1,6 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import Navbar from "../../components/navbar";
 import AccountForm from "../../components/accountForms";
+import { authMiddleware } from "@/middleware/auth";
 
 const CreateAccountsPage = () => {
   return (
@@ -11,6 +12,23 @@ const CreateAccountsPage = () => {
       </Box>
     </Box>
   );
+};
+
+export const getServerSideProps = async (ctx) => {
+  debugger
+  const authResult = await authMiddleware(ctx);
+  if (!authResult.isAuthenticated) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { isAdmin: authResult.isAdmin },
+  };
 };
 
 export default CreateAccountsPage;
