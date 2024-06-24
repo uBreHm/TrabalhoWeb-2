@@ -1,8 +1,6 @@
-//components/categoiryform
-
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Box, Button, FormControl, FormLabel, Input, useToast } from '@chakra-ui/react';
+import { Box, Button, FormControl, FormLabel, Input, Select, useToast } from '@chakra-ui/react';
 import { createCategories, updateCategories, fetchCategoriesById } from '@/pages/api/categories';
 
 const CategoryForm = ({ categoryId }) => {
@@ -73,20 +71,23 @@ const CategoryForm = ({ categoryId }) => {
   return (
     <Box>
       <form onSubmit={handleSubmit}>
+        <FormControl id="type" isRequired mt={4}>
+          <FormLabel>Tipo</FormLabel>
+          <Select
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            placeholder="Selecione o tipo"
+          >
+            <option value="Receita">Receita</option>
+            <option value="Despesa">Despesa</option>
+          </Select>
+        </FormControl>
         <FormControl id="description" isRequired>
           <FormLabel>Descrição</FormLabel>
           <Input
             type="text"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-          />
-        </FormControl>
-        <FormControl id="type" isRequired mt={4}>
-          <FormLabel>Tipo</FormLabel>
-          <Input
-            type="text"
-            value={type}
-            onChange={(e) => setType(e.target.value)}
           />
         </FormControl>
         <Button mt={4} colorScheme="teal" type="submit">

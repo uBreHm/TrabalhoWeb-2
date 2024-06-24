@@ -204,7 +204,7 @@ const EntryForm = ({ entryId }) => {
             />
           </FormControl>
 
-          <FormControl id="payment_date" isRequired>
+          <FormControl id="payment_date">
             <FormLabel>Data de Pagamento</FormLabel>
             <Input
               type="date"
@@ -236,10 +236,10 @@ const EntryForm = ({ entryId }) => {
               value={formData.status}
               onChange={handleChange}
             >
-              <option value="pending">Lançada</option>
-              <option value="paid">Confirmada</option>
-              <option value="overdue">Paga</option>
-              <option value="cancelled">Cancelada</option>
+              <option value="Lançada">Lançada</option>
+              <option value="Confirmada">Confirmada</option>
+              <option value="Paga">Paga</option>
+              <option value="Cancelada">Cancelada</option>
             </Select>
           </FormControl>
 
@@ -250,8 +250,8 @@ const EntryForm = ({ entryId }) => {
               value={formData.comments}
               onChange={handleChange}
             >
-              <option value="on">On</option>
-              <option value="off">Off</option>
+              <option value="On">On</option>
+              <option value="Off">Off</option>
             </Select>
           </FormControl>
 
