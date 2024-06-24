@@ -71,7 +71,11 @@ const PageEntry = () => {
 export const getServerSideProps = async (ctx) => {
   const authResult = await authMiddleware(ctx);
 
-  if (!authResult.props.isAdmin) {
+  if (authResult.redirect) {
+    return authResult;
+  }
+
+  if (!authResult.props || !authResult.props.isAdmin) {
     return {
       redirect: {
         destination: '/login',
@@ -84,6 +88,7 @@ export const getServerSideProps = async (ctx) => {
     props: { isAdmin: authResult.props.isAdmin },
   };
 };
+
 
 
 export default PageEntry;

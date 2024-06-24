@@ -31,7 +31,7 @@ export default function AdminDashboard() {
         })
         .catch((error) => {
           console.error('Erro ao verificar acesso de administrador:', error.message);
-          router.push('/login');
+          router.push('/');
         })
         .finally(() => {
           setLoading(false);

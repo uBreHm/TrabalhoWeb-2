@@ -17,7 +17,11 @@ const AccountsPage = () => {
 export const getServerSideProps = async (ctx) => {
   const authResult = await authMiddleware(ctx);
 
-  if (!authResult.props.isAdmin) {
+  if (authResult.redirect) {
+    return authResult;
+  }
+
+  if (!authResult.props || !authResult.props.isAdmin) {
     return {
       redirect: {
         destination: '/login',

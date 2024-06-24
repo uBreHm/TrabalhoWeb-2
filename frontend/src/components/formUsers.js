@@ -95,8 +95,8 @@ const FormUser = () => {
           <FormLabel>Nível</FormLabel>
           <Select name="level" value={formData.level} onChange={handleChange}>
             <option value="">Selecione</option>
-            <option value="admin">Admin</option>
-            <option value="user">User</option>
+            <option value="Admin">Admin</option>
+            <option value="User">User</option>
           </Select>
         </FormControl>
         <FormControl id="status" isRequired mt={4}>
