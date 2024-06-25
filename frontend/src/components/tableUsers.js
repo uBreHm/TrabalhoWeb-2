@@ -12,7 +12,7 @@ import {
   Text,
   IconButton,
   Heading,
-  Button, // Adicione o componente Button
+  Button,
 } from "@chakra-ui/react";
 import { fetchUsers, deleteUser } from "../pages/api/user";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
@@ -55,7 +55,7 @@ const TableUsers = () => {
   };
 
   const handleCreate = () => {
-    router.push(`/admin/createUsers`); // Redireciona para o formulário sem um ID
+    router.push(`/admin/createUsers`);
   };
 
   if (loading) {
