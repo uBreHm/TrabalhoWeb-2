@@ -1,4 +1,4 @@
-// middleware/authMiddleware.js
+
 const jwt = require('jsonwebtoken');
 
 const secret = "b88a58a7effe40649cbcd84e5533bb15";

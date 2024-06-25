@@ -14,7 +14,6 @@ app.use((req, res, next) => {
     next();
 });
 
-// Conexão com o banco de dados
 db.on('error', console.error.bind(console, 'Erro de conexão com o MongoDB:'));
 db.once('open', () => {
     console.log('Conexão com o MongoDB estabelecida com sucesso!');
